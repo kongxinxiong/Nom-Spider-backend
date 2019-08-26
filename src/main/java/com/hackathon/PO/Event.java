@@ -1,7 +1,6 @@
-package com.hackathon.Pojo;
+package com.hackathon.PO;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.hackathon.Pojo.User;
 
 import javax.persistence.*;
 import java.util.HashSet;

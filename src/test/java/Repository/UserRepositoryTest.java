@@ -1,9 +1,9 @@
 package Repository;
 
 import com.hackathon.Main;
-import com.hackathon.Pojo.Event;
-import com.hackathon.Pojo.Preference;
-import com.hackathon.Pojo.User;
+import com.hackathon.PO.Event;
+import com.hackathon.PO.Preference;
+import com.hackathon.PO.User;
 import com.hackathon.Repository.UserRepository;
 import org.junit.Assert;
 import org.junit.Test;

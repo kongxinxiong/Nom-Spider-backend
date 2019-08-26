@@ -1,7 +1,7 @@
 package Repository;
 
 import com.hackathon.Main;
-import com.hackathon.Pojo.Preference;
+import com.hackathon.PO.Preference;
 import com.hackathon.Repository.PreferenceRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;

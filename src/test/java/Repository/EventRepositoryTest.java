@@ -1,9 +1,8 @@
 package Repository;
 
 import com.hackathon.Main;
-import com.hackathon.Pojo.Event;
+import com.hackathon.PO.Event;
 import com.hackathon.Repository.EventRepository;
-import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;

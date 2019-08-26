@@ -1,6 +1,6 @@
 package com.hackathon.Repository;
 
-import com.hackathon.Pojo.Preference;
+import com.hackathon.PO.Preference;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import javax.transaction.Transactional;

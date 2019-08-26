@@ -1,6 +1,6 @@
 package com.hackathon.Service;
 
-import com.hackathon.Pojo.Preference;
+import com.hackathon.PO.Preference;
 import com.hackathon.Repository.PreferenceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

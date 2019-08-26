@@ -1,9 +1,10 @@
 package com.hackathon.Controller;
 
-import com.hackathon.Pojo.Preference;
+import com.hackathon.PO.Preference;
 import com.hackathon.Service.PreferenceService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -17,7 +18,7 @@ public class PreferenceController {
     private PreferenceService preferenceService;
     @RequestMapping(value = "/preferences", method = RequestMethod.GET)
     @ResponseBody
-    public List<Preference> showAllPreference() {
-        return this.preferenceService.findAll();
+    public ResponseEntity<List<Preference>> showAllPreference() {
+        return new ResponseEntity<List<Preference>> (this.preferenceService.findAll(),HttpStatus.OK);
     }
 }

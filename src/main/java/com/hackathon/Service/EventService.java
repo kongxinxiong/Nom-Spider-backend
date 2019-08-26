@@ -1,6 +1,6 @@
 package com.hackathon.Service;
 
-import com.hackathon.Pojo.Event;
+import com.hackathon.PO.Event;
 import com.hackathon.Repository.EventRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

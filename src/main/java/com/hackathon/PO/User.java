@@ -1,7 +1,6 @@
-package com.hackathon.Pojo;
+package com.hackathon.PO;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.util.Date;

@@ -1,7 +1,7 @@
 package com.hackathon.Service;
 
 
-import com.hackathon.Pojo.User;
+import com.hackathon.PO.User;
 import com.hackathon.Repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

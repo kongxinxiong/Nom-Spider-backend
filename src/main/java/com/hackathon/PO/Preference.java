@@ -1,4 +1,4 @@
-package com.hackathon.Pojo;
+package com.hackathon.PO;
 
 import javax.persistence.*;
 import java.util.HashSet;

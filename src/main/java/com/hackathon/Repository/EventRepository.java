@@ -1,5 +1,5 @@
 package com.hackathon.Repository;
-import com.hackathon.Pojo.Event;
+import com.hackathon.PO.Event;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import javax.transaction.Transactional;
