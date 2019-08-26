@@ -29,7 +29,9 @@ public class UserRepositoryTest {
         user.getEvents().add(event);
         Preference preference = new Preference();
         preference.setName("party");
+        event.getPreferences().add(preference);
         user.getPreferences().add(preference);
+
         this.userRepository.save(user);
     }
     @Test
@@ -37,7 +39,7 @@ public class UserRepositoryTest {
         Assert.assertTrue(this.userRepository.findByName("mark").size()>0);
     }
     @Test
-    public void delete() {
+    public void deleteByName() {
         this.userRepository.deleteByName("mark");
     }
 }

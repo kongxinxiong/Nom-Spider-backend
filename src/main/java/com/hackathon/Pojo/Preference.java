@@ -18,6 +18,10 @@ public class Preference {
     @ManyToMany(mappedBy="preferences")
     private Set<Event> events = new HashSet<Event>();
 
+    public Integer getId() {
+        return id;
+    }
+
     public String getName() {
         return name;
     }

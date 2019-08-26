@@ -1,7 +1,7 @@
 package com.hackathon.Controller;
 
-import com.hackathon.Pojo.User;
-import com.hackathon.Service.UserService;
+import com.hackathon.Pojo.Event;
+import com.hackathon.Service.EventService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -10,14 +10,14 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-@RestController
-public class UserController {
-    @Autowired
-    private UserService userService;
 
-    @RequestMapping(value = "/users", method = RequestMethod.GET)
+@RestController
+public class EventController {
+    @Autowired
+    private EventService eventService;
+    @RequestMapping(value = "/events", method = RequestMethod.GET)
     @ResponseBody
-    public List<User> showAllUsers () {
-        return this.userService.findAll();
+    public List<Event> showAllEvents () {
+        return this.eventService.findAll();
     }
 }

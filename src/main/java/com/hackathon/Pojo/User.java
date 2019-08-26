@@ -1,5 +1,6 @@
 package com.hackathon.Pojo;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
@@ -19,14 +20,20 @@ public class User {
     private String name;
     @Column(name="birthday")
     private Date birthday;
-    @OneToMany(cascade=CascadeType.PERSIST,fetch=FetchType.LAZY)
-    @JoinTable(name="user_event_mapping",joinColumns=@JoinColumn(name="userID"),inverseJoinColumns=@JoinColumn(name="eventID"))
+    @JsonIgnore
+    @OneToMany(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+    @JoinTable(name = "user_event_mapping", joinColumns = @JoinColumn(name = "userID"), inverseJoinColumns = @JoinColumn(name = "eventID"))
     private Set<Event> events = new HashSet<>();
+    @JsonIgnore
     @ManyToMany(cascade=CascadeType.PERSIST,fetch=FetchType.LAZY)
     @JoinTable(name="user_preference_mapping",joinColumns=@JoinColumn(name="userID"),inverseJoinColumns=@JoinColumn(name="preferenceID"))
     private Set<Preference> preferences = new HashSet<Preference>();
     public String getName() {
         return name;
+    }
+
+    public Integer getId() {
+        return id;
     }
 
     public void setName(String name) {

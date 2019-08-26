@@ -1,5 +1,6 @@
 package com.hackathon.Pojo;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.hackathon.Pojo.User;
 
 import javax.persistence.*;
@@ -19,9 +20,18 @@ public class Event {
     @ManyToOne(cascade=CascadeType.PERSIST)
     @JoinColumn(name="eventID")
     private User user;
+    @JsonIgnore
     @ManyToMany(cascade=CascadeType.PERSIST,fetch=FetchType.LAZY)
     @JoinTable(name="event_preference_mapping",joinColumns=@JoinColumn(name="eventID"),inverseJoinColumns=@JoinColumn(name="preferenceID"))
     private Set<Preference> preferences= new HashSet<Preference>();
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
     public User getUser() {
         return user;
