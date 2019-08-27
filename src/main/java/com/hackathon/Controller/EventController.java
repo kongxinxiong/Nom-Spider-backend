@@ -5,12 +5,9 @@ import com.hackathon.Service.EventService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
+import javax.validation.Valid;
 
 @RestController
 public class EventController {
@@ -18,7 +15,29 @@ public class EventController {
     private EventService eventService;
     @RequestMapping(value = "/events", method = RequestMethod.GET)
     @ResponseBody
-    public ResponseEntity<List<Event>> showAllEvents () {
-        return new ResponseEntity<List<Event>> (this.eventService.findAll(), HttpStatus.OK);
+    public ResponseEntity<Object> showAllEvents () {
+        return new ResponseEntity<Object> (this.eventService.findAll(), HttpStatus.OK);
+    }
+    @RequestMapping(value = "/event", method = RequestMethod.POST)
+    @ResponseBody
+    public ResponseEntity<Object> addPreference(@Valid Event event, BindingResult result) {
+        if (result.hasErrors()) {
+            return new ResponseEntity<Object>(result.getAllErrors(), HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<Object> (this.eventService.save(event),HttpStatus.OK);
+    }
+    @RequestMapping(value = "/event", method = RequestMethod.PUT)
+    @ResponseBody
+    public ResponseEntity<Object> updatePreference(@Valid Event event, BindingResult result) {
+        if (result.hasErrors()) {
+            return new ResponseEntity<Object>(result.getAllErrors(), HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<Object> (this.eventService.save(event),HttpStatus.OK);
+    }
+    @RequestMapping(value = "/event/{id}", method = RequestMethod.DELETE)
+    @ResponseBody
+    public ResponseEntity<Object> deletePreferenceById(@PathVariable("id") Integer id) {
+        this.eventService.deleteById(id);
+        return new ResponseEntity<Object> ("successfully deleted",HttpStatus.OK);
     }
 }

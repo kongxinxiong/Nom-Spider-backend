@@ -19,4 +19,8 @@ public class EventService {
     public List<Event> findAll() {
         return this.eventRepository.findAll();
     }
+
+    public void deleteById (Integer id) {
+        this.eventRepository.deleteById(id);
+    }
 }

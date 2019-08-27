@@ -5,12 +5,10 @@ import com.hackathon.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import javax.validation.Valid;
 @RestController
 public class UserController {
     @Autowired
@@ -18,7 +16,32 @@ public class UserController {
 
     @RequestMapping(value = "/users", method = RequestMethod.GET)
     @ResponseBody
-    public ResponseEntity<List<User>> showAllUsers () {
-        return new ResponseEntity<List<User>> (this.userService.findAll(), HttpStatus.OK);
+    public ResponseEntity<Object> showAllUsers () {
+        return new ResponseEntity<Object> (this.userService.findAll(), HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/user", method = RequestMethod.POST)
+    @ResponseBody
+    public ResponseEntity<Object> addUser (@Valid User user, BindingResult result) {
+        if (result.hasErrors()) {
+            return new ResponseEntity<Object>(result.getAllErrors(), HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<Object> (this.userService.save(user), HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/user", method = RequestMethod.PUT)
+    @ResponseBody
+    public ResponseEntity<Object> updateUser (@Valid User user, BindingResult result) {
+        if (result.hasErrors()) {
+            return new ResponseEntity<Object> (result.getAllErrors(), HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<Object> (this.userService.save(user), HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/user/{id}", method = RequestMethod.DELETE)
+    @ResponseBody
+    public ResponseEntity<Object> deleteUser (@PathVariable("id") Integer id) {
+        this.userService.deleteById(id);
+        return new ResponseEntity<Object> ("successfully deleted", HttpStatus.OK);
     }
 }

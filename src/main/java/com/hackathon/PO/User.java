@@ -3,6 +3,10 @@ package com.hackathon.PO;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -16,9 +20,16 @@ public class User {
     @Column(name="id")
     private Integer id;
     @Column(name="name")
+    @NotBlank(message="name cannot be empty")
     private String name;
     @Column(name="birthday")
+    @NotNull(message="birthday cannot be empty")
     private Date birthday;
+    @Column(name="email")
+    @NotBlank(message="email cannot be empty")
+    @Email(message="you must input a valid email address")
+    @Pattern(regexp = "[a-zA-Z]*@nomura.com", message="you must input Nomura email address")
+    private String email;
     @JsonIgnore
     @OneToMany(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
     @JoinTable(name = "user_event_mapping", joinColumns = @JoinColumn(name = "userID"), inverseJoinColumns = @JoinColumn(name = "eventID"))
@@ -63,12 +74,21 @@ public class User {
         this.preferences = preferences;
     }
 
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
     @Override
     public String toString() {
         return "User{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", birthday=" + birthday +
+                ", email='" + email + '\'' +
                 '}';
     }
 }

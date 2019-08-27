@@ -3,6 +3,7 @@ package com.hackathon.PO;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -15,6 +16,7 @@ public class Event {
     @Column(name="id")
     private Integer id;
     @Column(name="title")
+    @NotBlank(message="title cannot be empty")
     private String title;
     @ManyToOne(cascade=CascadeType.PERSIST)
     @JoinColumn(name="eventID")

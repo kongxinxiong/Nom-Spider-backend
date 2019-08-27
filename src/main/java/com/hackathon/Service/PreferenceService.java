@@ -19,4 +19,7 @@ public class PreferenceService {
     public List<Preference> findAll () {
         return this.preferenceRepository.findAll();
     }
+    public void deleteById (Integer id) {
+        this.preferenceRepository.deleteById(id);
+    }
 }

@@ -1,6 +1,8 @@
 package com.hackathon.PO;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -12,6 +14,7 @@ public class Preference {
     @Column(name="id")
     private Integer id;
     @Column(name="name")
+    @NotBlank(message="name cannot be empty")
     private String name;
     @ManyToMany(mappedBy="preferences")
     private Set<User> users = new HashSet<User>();
