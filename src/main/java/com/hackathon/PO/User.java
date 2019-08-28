@@ -28,7 +28,7 @@ public class User {
     @Column(name="email")
     @NotBlank(message="email cannot be empty")
     @Email(message="you must input a valid email address")
-    @Pattern(regexp = "[a-zA-Z]*@nomura.com", message="you must input Nomura email address")
+    @Pattern(regexp = "[a-zA-Z]*@hackathon.com", message="you must input hackathon email address")
     private String email;
     @JsonIgnore
     @OneToMany(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
