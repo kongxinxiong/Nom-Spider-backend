@@ -18,8 +18,8 @@ public class Event {
     @Column(name="title")
     @NotBlank(message="title cannot be empty")
     private String title;
-    @ManyToOne(cascade=CascadeType.PERSIST)
-    @JoinColumn(name="eventID")
+    @ManyToOne(cascade=CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name = "userID")
     private User user;
     @JsonIgnore
     @ManyToMany(cascade=CascadeType.PERSIST,fetch=FetchType.LAZY)

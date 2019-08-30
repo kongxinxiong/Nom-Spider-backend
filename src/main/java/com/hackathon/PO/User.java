@@ -31,8 +31,7 @@ public class User {
     @Pattern(regexp = "[a-zA-Z]*@hackathon.com", message="you must input hackathon email address")
     private String email;
     @JsonIgnore
-    @OneToMany(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
-    @JoinTable(name = "user_event_mapping", joinColumns = @JoinColumn(name = "userID"), inverseJoinColumns = @JoinColumn(name = "eventID"))
+    @OneToMany(mappedBy="user",fetch = FetchType.LAZY)
     private Set<Event> events = new HashSet<>();
     @JsonIgnore
     @ManyToMany(cascade=CascadeType.PERSIST,fetch=FetchType.LAZY)

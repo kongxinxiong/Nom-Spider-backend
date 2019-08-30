@@ -3,6 +3,7 @@ package Service;
 import com.hackathon.Main;
 import com.hackathon.Service.EventService;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,7 @@ public class EventServiceTest {
     }
 
     @Test
+    @Ignore
     public void findAll() {
         Assert.assertTrue(this.eventService.findAll().size()>0);
     }

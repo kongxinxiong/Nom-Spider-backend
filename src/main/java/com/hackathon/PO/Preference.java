@@ -1,5 +1,7 @@
 package com.hackathon.PO;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -16,9 +18,11 @@ public class Preference {
     @Column(name="name")
     @NotBlank(message="name cannot be empty")
     private String name;
-    @ManyToMany(mappedBy="preferences")
+    @ManyToMany(mappedBy="preferences", fetch = FetchType.LAZY)
+    @JsonIgnore
     private Set<User> users = new HashSet<User>();
-    @ManyToMany(mappedBy="preferences")
+    @ManyToMany(mappedBy="preferences", fetch = FetchType.LAZY)
+    @JsonIgnore
     private Set<Event> events = new HashSet<Event>();
 
     public Integer getId() {
