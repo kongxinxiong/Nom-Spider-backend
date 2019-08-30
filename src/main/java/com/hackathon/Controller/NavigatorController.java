@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -17,9 +18,9 @@ public class NavigatorController {
         return "redirect:/index.html";
     }
 
-    @RequestMapping(value = "/api/login", method = RequestMethod.GET)
-    public ResponseEntity<String> login() {
+    @RequestMapping(value = "/api/login/{username}", method = RequestMethod.GET)
+    public ResponseEntity<String> login(@PathVariable("username") String username) {
         System.out.println("login");
-        return new ResponseEntity<String>("login successfully", HttpStatus.OK);
+        return new ResponseEntity<String>(username, HttpStatus.OK);
     }
 }
