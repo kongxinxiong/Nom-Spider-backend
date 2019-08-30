@@ -27,7 +27,7 @@ public class EventRepositoryTest {
         user.setBirthday(new Date());
         user.setName("name");
         user.setEmail("asdasd@hackathon.com");
-        event.setUser(user);
+        event.setEventCreator(user);
         this.eventRepository.save(event);
     }
     @Test

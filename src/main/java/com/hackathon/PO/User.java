@@ -25,14 +25,22 @@ public class User {
     @Column(name="birthday")
     @NotNull(message="birthday cannot be empty")
     private Date birthday;
+    @Column(name="location")
+    private String location;
+
     @Column(name="email")
     @NotBlank(message="email cannot be empty")
     @Email(message="you must input a valid email address")
     @Pattern(regexp = "[a-zA-Z]*@hackathon.com", message="you must input hackathon email address")
     private String email;
     @JsonIgnore
-    @OneToMany(mappedBy="user",fetch = FetchType.LAZY)
-    private Set<Event> events = new HashSet<>();
+    @OneToMany(mappedBy="eventCreator",fetch = FetchType.LAZY)
+    private Set<Event> userCreatedEvents = new HashSet<>();
+
+    @JsonIgnore
+    @ManyToMany(mappedBy="eventJointUsers", fetch = FetchType.LAZY)
+    private Set<Event> jointEvents = new HashSet<>();
+
     @JsonIgnore
     @ManyToMany(cascade=CascadeType.PERSIST,fetch=FetchType.LAZY)
     @JoinTable(name="user_preference_mapping",joinColumns=@JoinColumn(name="userID"),inverseJoinColumns=@JoinColumn(name="preferenceID"))
@@ -57,12 +65,12 @@ public class User {
         this.birthday = birthday;
     }
 
-    public Set<Event> getEvents() {
-        return events;
+    public Set<Event> getUserCreatedEvents() {
+        return userCreatedEvents;
     }
 
-    public void setEvents(Set<Event> events) {
-        this.events = events;
+    public void setUserCreatedEvents(Set<Event> userCreatedEvents) {
+        this.userCreatedEvents = userCreatedEvents;
     }
 
     public Set<Preference> getPreferences() {
@@ -79,6 +87,22 @@ public class User {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public Set<Event> getJointEvents() {
+        return jointEvents;
+    }
+
+    public void setJointEvents(Set<Event> jointEvents) {
+        this.jointEvents = jointEvents;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
     }
 
     @Override

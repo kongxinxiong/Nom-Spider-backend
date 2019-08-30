@@ -1,6 +1,8 @@
 package com.hackathon.Controller;
 
 import com.hackathon.PO.User;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,5 +15,11 @@ public class NavigatorController {
     public String index() {
         System.out.println("home page");
         return "redirect:/index.html";
+    }
+
+    @RequestMapping(value = "/api/login", method = RequestMethod.GET)
+    public ResponseEntity<String> login() {
+        System.out.println("login");
+        return new ResponseEntity<String>("login successfully", HttpStatus.OK);
     }
 }

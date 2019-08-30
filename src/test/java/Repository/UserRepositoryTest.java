@@ -31,7 +31,7 @@ public class UserRepositoryTest {
         user.setName("mark");
         Event event = new Event();
         event.setTitle("hackathon event");
-        user.getEvents().add(event);
+        user.getJointEvents().add(event);
 //        event.setUser(user);
         Preference preference = new Preference();
         preference.setName("party");

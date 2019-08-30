@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -20,7 +21,20 @@ public class Event {
     private String title;
     @ManyToOne(cascade=CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "userID")
-    private User user;
+    private User eventCreator;
+    @Column(name = "startDate")
+    @NotBlank(message="startDate cannot be empty")
+    private Date startDate;
+    @Column(name = "endDate")
+    @NotBlank(message="end date cannot be empty")
+    private Date endDate;
+    @Column(name="location")
+    private String location;
+    @JsonIgnore
+    @ManyToMany(cascade=CascadeType.PERSIST,fetch=FetchType.LAZY)
+    @JoinTable(name="event_joint_user_mapping",joinColumns=@JoinColumn(name="eventID"),inverseJoinColumns=@JoinColumn(name="jointUserID"))
+    private Set<User> eventJointUsers= new HashSet<User>();
+
     @JsonIgnore
     @ManyToMany(cascade=CascadeType.PERSIST,fetch=FetchType.LAZY)
     @JoinTable(name="event_preference_mapping",joinColumns=@JoinColumn(name="eventID"),inverseJoinColumns=@JoinColumn(name="preferenceID"))
@@ -34,12 +48,12 @@ public class Event {
         this.id = id;
     }
 
-    public User getUser() {
-        return user;
+    public User getEventCreator() {
+        return eventCreator;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setEventCreator(User eventCreator) {
+        this.eventCreator = eventCreator;
     }
 
     public String getTitle() {
@@ -56,6 +70,38 @@ public class Event {
 
     public void setPreferences(Set<Preference> preferences) {
         this.preferences = preferences;
+    }
+
+    public Date getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
+    }
+
+    public Date getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    public Set<User> getEventJointUsers() {
+        return eventJointUsers;
+    }
+
+    public void setEventJointUsers(Set<User> eventJointUsers) {
+        this.eventJointUsers = eventJointUsers;
     }
 
     @Override
