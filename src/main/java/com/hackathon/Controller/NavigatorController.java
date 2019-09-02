@@ -17,10 +17,4 @@ public class NavigatorController {
         System.out.println("home page");
         return "redirect:/index.html";
     }
-
-    @RequestMapping(value = "/api/login/{username}", method = RequestMethod.GET)
-    public ResponseEntity<String> login(@PathVariable("username") String username) {
-        System.out.println("login");
-        return new ResponseEntity<String>(username, HttpStatus.OK);
-    }
 }

@@ -22,4 +22,8 @@ public class UserService {
     public void deleteById (Integer id) {
         this.userRepository.deleteById(id);
     }
+
+    public User findByUsernameAndPassword(String username, String password){
+        return this.userRepository.findByUsernameAndPassword(username,password);
+    }
 }

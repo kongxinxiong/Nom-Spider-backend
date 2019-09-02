@@ -10,4 +10,6 @@ public interface UserRepository extends JpaRepository<User,Integer> {
     List<User> findByName (String name);
     @Transactional
     void deleteByName(String name);
+
+    User findByUsernameAndPassword(String username, String password);
 }

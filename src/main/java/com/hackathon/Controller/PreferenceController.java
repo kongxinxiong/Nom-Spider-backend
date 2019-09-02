@@ -22,7 +22,7 @@ public class PreferenceController {
     }
     @RequestMapping(value = "/preference", method = RequestMethod.POST)
     @ResponseBody
-    public ResponseEntity<Object> addPreference(@Valid Preference preference, BindingResult result) {
+    public ResponseEntity<Object> addPreference(@RequestBody @Valid Preference preference, BindingResult result) {
         if (result.hasErrors()) {
             return new ResponseEntity<Object>(result.getAllErrors(), HttpStatus.BAD_REQUEST);
         }
@@ -30,7 +30,7 @@ public class PreferenceController {
     }
     @RequestMapping(value = "/preference", method = RequestMethod.PUT)
     @ResponseBody
-    public ResponseEntity<Object> updatePreference(@Valid Preference preference, BindingResult result) {
+    public ResponseEntity<Object> updatePreference(@RequestBody @Valid Preference preference, BindingResult result) {
         if (result.hasErrors()) {
             return new ResponseEntity<Object>(result.getAllErrors(), HttpStatus.BAD_REQUEST);
         }

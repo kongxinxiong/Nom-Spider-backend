@@ -7,6 +7,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
 import javax.validation.Valid;
 
 @RestController
@@ -21,7 +23,7 @@ public class EventController {
     }
     @RequestMapping(value = "/event", method = RequestMethod.POST)
     @ResponseBody
-    public ResponseEntity<Object> addPreference(@Valid Event event, BindingResult result) {
+    public ResponseEntity<Object> addPreference(@RequestBody @Valid Event event, BindingResult result) {
         if (result.hasErrors()) {
             return new ResponseEntity<Object>(result.getAllErrors(), HttpStatus.BAD_REQUEST);
         }
@@ -29,7 +31,7 @@ public class EventController {
     }
     @RequestMapping(value = "/event", method = RequestMethod.PUT)
     @ResponseBody
-    public ResponseEntity<Object> updatePreference(@Valid Event event, BindingResult result) {
+    public ResponseEntity<Object> updatePreference(@RequestBody @Valid Event event, BindingResult result) {
         if (result.hasErrors()) {
             return new ResponseEntity<Object>(result.getAllErrors(), HttpStatus.BAD_REQUEST);
         }
@@ -41,4 +43,13 @@ public class EventController {
         this.eventService.deleteById(id);
         return new ResponseEntity<Object> ("successfully deleted",HttpStatus.OK);
     }
+
+//    @RequestMapping(value = "/event/img", method = RequestMethod.POST)
+//    @ResponseBody
+//    public ResponseEntity<Object> uploadEventImage(@RequestParam("file") MultipartFile file) {
+//        if (result.hasErrors()) {
+//            return new ResponseEntity<Object>(result.getAllErrors(), HttpStatus.BAD_REQUEST);
+//        }
+//        return new ResponseEntity<Object> (this.eventService.save(event),HttpStatus.OK);
+//    }
 }
