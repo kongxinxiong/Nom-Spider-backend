@@ -2,9 +2,9 @@ package com.hackathon.Controller;
 
 import com.hackathon.PO.User;
 import com.hackathon.Service.UserService;
-import org.json.JSONObject;
+import com.hackathon.Util.ResponseResult;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpRequest;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
@@ -16,6 +16,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.HashMap;
 
 @RestController
 @RequestMapping("api")
@@ -54,39 +56,49 @@ public class UserController {
         return new ResponseEntity<Object> ("successfully deleted", HttpStatus.OK);
     }
     @RequestMapping(value = "/user/login", method = RequestMethod.POST)
-    public ResponseEntity<Object> login(@RequestBody User user) {
+    public ResponseEntity<ResponseResult> login(@RequestBody User user) {
         System.out.println("username:"+user.getUsername());
         System.out.println("password:"+user.getPassword());
         System.out.println("login successful");
+        HashMap<String, String> errorMsg = new HashMap<>();
+        errorMsg.put("message","invalid username or password");
         if (user.getUsername() != null || user.getPassword() != null) {
             User result = this.userService.findByUsernameAndPassword(user.getUsername(), user.getPassword());
-            return new ResponseEntity<Object>(result, HttpStatus.OK);
+            if (result == null) {
+                return new ResponseEntity<ResponseResult>(ResponseResult.fail("invalid username or password"),HttpStatus.BAD_REQUEST);
+            }
+            return new ResponseEntity<ResponseResult>(ResponseResult.success(result,"success"), HttpStatus.OK);
         }
-        return new ResponseEntity<Object>("invalid username or password", HttpStatus.OK);
+        return new ResponseEntity<ResponseResult>(ResponseResult.fail("invalid username or password"), HttpStatus.BAD_REQUEST);
     }
-//    @RequestMapping(valus
-//    public ResponseEntity<Object> uploadUserImage (HttpServletRequest req, @RequestParam("file") MultipartFile file, Model m) {
-//        try {
-//            //2.根据时间戳创建新的文件名，这样即便是第二次上传相同名称的文件，也不会把第一次的文件覆盖了
-//            String fileName = System.currentTimeMillis() + file.getOriginalFilename();
-//            //3.通过req.getServletContext().getRealPath("") 获取当前项目的真实路径，然后拼接前面的文件名
-//            String destFileName = req.getServletContext().getRealPath("") + "uploaded" + File.separator + fileName;
-//            //4.第一次运行的时候，这个文件所在的目录往往是不存在的，这里需要创建一下目录（创建到了webapp下uploaded文件夹下）
-//            File destFile = new File(destFileName);
-//            destFile.getParentFile().mkdirs();
-//            //5.把浏览器上传的文件复制到希望的位置
-//            file.transferTo(destFile);
-//            //6.把文件名放在model里，以便后续显示用
-//            m.addAttribute("fileName", fileName);
-//        } catch (FileNotFoundException e) {
-//            e.printStackTrace();
-//            return "上传失败," + e.getMessage();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//            return "上传失败," + e.getMessage();
-//        }
-//
-//        return "showImg";
-//        return new ResponseEntity<Object> (this.userService.save(user), HttpStatus.OK);
-//    }
+    @RequestMapping(value = "user/image", method = RequestMethod.POST)
+    public ResponseEntity<ResponseResult> uploadUserImage (@RequestParam("uploadFile") MultipartFile file) {
+        try {
+            String fileName = System.currentTimeMillis() + file.getOriginalFilename();
+            String path = Thread.currentThread().getContextClassLoader().getResource("").getPath()+"temp/uploadedFiles/user/";
+            String destFileName = path + fileName;
+            File destFile = new File(destFileName);
+            destFile.getParentFile().mkdirs();
+
+            file.transferTo(destFile);
+            System.out.println("destFile:"+destFile);
+            return new ResponseEntity(ResponseResult.success(fileName,"success"), HttpStatus.OK);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            return new ResponseEntity(ResponseResult.fail("fail to upload file."),HttpStatus.BAD_REQUEST);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return new ResponseEntity(ResponseResult.fail("fail to upload file."),HttpStatus.BAD_REQUEST);
+        }
+    }
+    @RequestMapping(value = "/user/image/{path}", method = RequestMethod.GET)
+    @ResponseBody
+    public ResponseEntity<Object> getUserPhoto (@PathVariable("path") String path) {
+        File resultFile = new File (path);
+        if (resultFile.isFile()) {
+            return new ResponseEntity<>(new FileSystemResource(resultFile),HttpStatus.OK);
+        } else {
+            return new ResponseEntity(ResponseResult.fail("file not found"),HttpStatus.BAD_REQUEST);
+        }
+    }
 }

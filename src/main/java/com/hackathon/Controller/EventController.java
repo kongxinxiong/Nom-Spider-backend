@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("api")
@@ -37,9 +38,20 @@ public class EventController {
         }
         return new ResponseEntity<Object> (this.eventService.save(event),HttpStatus.OK);
     }
+    @RequestMapping(value = "/event/{id}", method = RequestMethod.GET)
+    @ResponseBody
+    public ResponseEntity<Object> getEventById(@PathVariable("id") Integer id) {
+        Optional<Event> event = this.eventService.findById(id);
+        if (event.isPresent()) {
+            return new ResponseEntity<Object>(event, HttpStatus.OK);
+        }
+        else {
+            return new ResponseEntity<Object>("Event not found.", HttpStatus.OK);
+        }
+    }
     @RequestMapping(value = "/event/{id}", method = RequestMethod.DELETE)
     @ResponseBody
-    public ResponseEntity<Object> deletePreferenceById(@PathVariable("id") Integer id) {
+    public ResponseEntity<Object> deleteEventById(@PathVariable("id") Integer id) {
         this.eventService.deleteById(id);
         return new ResponseEntity<Object> ("successfully deleted",HttpStatus.OK);
     }

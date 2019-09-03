@@ -26,9 +26,12 @@ public class UserRepositoryTest {
     @Ignore
     public void save() {
         User user = new User();
-        user.setEmail("ffff@hackathon.com");
+        user.setEmail("ella@hackathon.com");
+        user.setUsername("Ella username");
+        user.setPassword("password");
         user.setBirthday(new Date());
         user.setName("mark");
+        user.setLocation("Hong Kong");
         Event event = new Event();
         event.setTitle("hackathon event");
         user.getJointEvents().add(event);
@@ -39,6 +42,11 @@ public class UserRepositoryTest {
         user.getPreferences().add(preference);
 
         this.userRepository.save(user);
+    }
+    @Test
+    public void findByUsernameAndPassword() {
+        User user = this.userRepository.findByUsernameAndPassword("Ella username","password");
+        System.out.println(user.getEmail());
     }
     @Test
     @Ignore

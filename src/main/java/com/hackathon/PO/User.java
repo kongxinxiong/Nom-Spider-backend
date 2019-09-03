@@ -37,6 +37,8 @@ public class User {
     @Email(message="you must input a valid email address")
     @Pattern(regexp = "[a-zA-Z]*@hackathon.com", message="you must input hackathon email address")
     private String email;
+    @Column(name="photoURL")
+    private String photoURL;
     @JsonIgnore
     @OneToMany(mappedBy="eventCreator",fetch = FetchType.LAZY)
     private Set<Event> userCreatedEvents = new HashSet<>();
@@ -123,6 +125,14 @@ public class User {
 
     public void setLocation(String location) {
         this.location = location;
+    }
+
+    public String getPhotoURL() {
+        return photoURL;
+    }
+
+    public void setPhotoURL(String photoURL) {
+        this.photoURL = photoURL;
     }
 
     @Override

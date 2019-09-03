@@ -32,6 +32,8 @@ public class Event {
     private String location;
     @Column(name="description")
     private String description;
+    @Column(name="maxNumber")
+    private String maxNumber;
     @JsonIgnore
     @ManyToMany(cascade=CascadeType.PERSIST,fetch=FetchType.LAZY)
     @JoinTable(name="event_joint_user_mapping",joinColumns=@JoinColumn(name="eventID"),inverseJoinColumns=@JoinColumn(name="jointUserID"))
@@ -96,6 +98,14 @@ public class Event {
 
     public void setLocation(String location) {
         this.location = location;
+    }
+
+    public String getMaxNumber() {
+        return maxNumber;
+    }
+
+    public void setMaxNumber(String maxNumber) {
+        this.maxNumber = maxNumber;
     }
 
     public String getDescription() {
