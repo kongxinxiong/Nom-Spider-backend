@@ -91,10 +91,12 @@ public class UserController {
             return new ResponseEntity(ResponseResult.fail("fail to upload file."),HttpStatus.BAD_REQUEST);
         }
     }
-    @RequestMapping(value = "/user/image/{path}", method = RequestMethod.GET)
+    @RequestMapping(value = "/user/image/{filename}", method = RequestMethod.GET)
     @ResponseBody
-    public ResponseEntity<Object> getUserPhoto (@PathVariable("path") String path) {
-        File resultFile = new File (path);
+    public ResponseEntity<Object> getUserPhoto (@PathVariable("filename") String filename) {
+        String path = Thread.currentThread().getContextClassLoader().getResource("").getPath()+"temp/uploadedFiles/user/";
+        File resultFile = new File (path,filename);
+        System.out.println("path:"+resultFile.getAbsolutePath());
         if (resultFile.isFile()) {
             return new ResponseEntity<>(new FileSystemResource(resultFile),HttpStatus.OK);
         } else {
