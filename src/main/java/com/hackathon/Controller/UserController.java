@@ -17,6 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.*;
 import java.util.HashMap;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("api")
@@ -26,33 +27,44 @@ public class UserController {
 
     @RequestMapping(value = "/users", method = RequestMethod.GET)
     @ResponseBody
-    public ResponseEntity<Object> showAllUsers () {
-        return new ResponseEntity<Object> (this.userService.findAll(), HttpStatus.OK);
+    public ResponseEntity<ResponseResult> showAllUsers () {
+        return new ResponseEntity<ResponseResult> (ResponseResult.success(this.userService.findAll(),"success"), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/user", method = RequestMethod.POST)
     @ResponseBody
-    public ResponseEntity<Object> addUser (@RequestBody @Valid User user, BindingResult result) {
+    public ResponseEntity<ResponseResult> addUser (@RequestBody @Valid User user, BindingResult result) {
         if (result.hasErrors()) {
-            return new ResponseEntity<Object>(result.getAllErrors(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<ResponseResult>(ResponseResult.fail(result.getFieldError().getDefaultMessage()), HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<Object> (this.userService.save(user), HttpStatus.OK);
+        return new ResponseEntity<ResponseResult> (ResponseResult.success(this.userService.save(user),"success"), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/user", method = RequestMethod.PUT)
     @ResponseBody
-    public ResponseEntity<Object> updateUser (@RequestBody @Valid User user, BindingResult result) {
+    public ResponseEntity<ResponseResult> updateUser (@RequestBody @Valid User user, BindingResult result) {
         if (result.hasErrors()) {
-            return new ResponseEntity<Object> (result.getAllErrors(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<ResponseResult> (ResponseResult.fail(result.getFieldError().getDefaultMessage()), HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<Object> (this.userService.save(user), HttpStatus.OK);
+        return new ResponseEntity<ResponseResult> (ResponseResult.success(this.userService.save(user),"success"), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/user/{id}", method = RequestMethod.DELETE)
     @ResponseBody
-    public ResponseEntity<Object> deleteUser (@PathVariable("id") Integer id) {
+    public ResponseEntity<ResponseResult> deleteUser (@PathVariable("id") Integer id) {
         this.userService.deleteById(id);
-        return new ResponseEntity<Object> ("successfully deleted", HttpStatus.OK);
+        return new ResponseEntity<ResponseResult> (ResponseResult.success(null,"success"), HttpStatus.OK);
+    }
+    @RequestMapping(value = "/user/{id}", method = RequestMethod.GET)
+    @ResponseBody
+    public ResponseEntity<ResponseResult> getUserById (@PathVariable("id") Integer id) {
+        Optional<User> user = this.userService.findById(id);
+        if (user.isPresent()) {
+            return new ResponseEntity<ResponseResult> (ResponseResult.success(user,"success"), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(ResponseResult.fail("user not found"),HttpStatus.BAD_REQUEST);
+        }
+
     }
     @RequestMapping(value = "/user/login", method = RequestMethod.POST)
     public ResponseEntity<ResponseResult> login(@RequestBody User user) {

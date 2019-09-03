@@ -2,6 +2,7 @@ package com.hackathon.Controller;
 
 import com.hackathon.PO.Preference;
 import com.hackathon.Service.PreferenceService;
+import com.hackathon.Util.ResponseResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,30 +18,30 @@ public class PreferenceController {
     private PreferenceService preferenceService;
     @RequestMapping(value = "/preferences", method = RequestMethod.GET)
     @ResponseBody
-    public ResponseEntity<Object> showAllPreference() {
-        return new ResponseEntity<Object> (this.preferenceService.findAll(),HttpStatus.OK);
+    public ResponseEntity<ResponseResult> showAllPreference() {
+        return new ResponseEntity<ResponseResult> (ResponseResult.success(this.preferenceService.findAll(),"success"),HttpStatus.OK);
     }
     @RequestMapping(value = "/preference", method = RequestMethod.POST)
     @ResponseBody
-    public ResponseEntity<Object> addPreference(@RequestBody @Valid Preference preference, BindingResult result) {
+    public ResponseEntity<ResponseResult> addPreference(@RequestBody @Valid Preference preference, BindingResult result) {
         if (result.hasErrors()) {
-            return new ResponseEntity<Object>(result.getAllErrors(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<ResponseResult>(ResponseResult.fail(result.getFieldError().getDefaultMessage()), HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<Object> (this.preferenceService.save(preference),HttpStatus.OK);
+        return new ResponseEntity<ResponseResult> (ResponseResult.success(this.preferenceService.save(preference),"success"),HttpStatus.OK);
     }
     @RequestMapping(value = "/preference", method = RequestMethod.PUT)
     @ResponseBody
-    public ResponseEntity<Object> updatePreference(@RequestBody @Valid Preference preference, BindingResult result) {
+    public ResponseEntity<ResponseResult> updatePreference(@RequestBody @Valid Preference preference, BindingResult result) {
         if (result.hasErrors()) {
-            return new ResponseEntity<Object>(result.getAllErrors(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<ResponseResult>(ResponseResult.fail(result.getFieldError().getDefaultMessage()), HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<Object> (this.preferenceService.save(preference),HttpStatus.OK);
+        return new ResponseEntity<ResponseResult> (ResponseResult.success(this.preferenceService.save(preference),"success"),HttpStatus.OK);
     }
     @RequestMapping(value = "/preference/{id}", method = RequestMethod.DELETE)
     @ResponseBody
-    public ResponseEntity<Object> deletePreferenceById(@PathVariable("id") Integer id) {
+    public ResponseEntity<ResponseResult> deletePreferenceById(@PathVariable("id") Integer id) {
         this.preferenceService.deleteById(id);
-        return new ResponseEntity<Object> ("successfully deleted",HttpStatus.OK);
+        return new ResponseEntity<ResponseResult> (ResponseResult.success(null,"success"),HttpStatus.OK);
     }
 
 }
