@@ -51,6 +51,11 @@ public class User {
     @ManyToMany(cascade=CascadeType.PERSIST,fetch=FetchType.LAZY)
     @JoinTable(name="user_preference_mapping",joinColumns=@JoinColumn(name="userID"),inverseJoinColumns=@JoinColumn(name="preferenceID"))
     private Set<Preference> preferences = new HashSet<Preference>();
+    @JsonIgnore
+    @ManyToMany(cascade=CascadeType.PERSIST,fetch=FetchType.LAZY)
+    @JoinTable(name="user_interest_events_mapping",joinColumns=@JoinColumn(name="userID"),inverseJoinColumns=@JoinColumn(name="eventID"))
+    private Set<Event> userInterestEvents = new HashSet<Event>();
+
     public String getName() {
         return name;
     }
@@ -125,6 +130,14 @@ public class User {
 
     public void setLocation(String location) {
         this.location = location;
+    }
+
+    public Set<Event> getUserInterestEvents() {
+        return userInterestEvents;
+    }
+
+    public void setUserInterestEvents(Set<Event> userInterestEvents) {
+        this.userInterestEvents = userInterestEvents;
     }
 
     public String getPhotoURL() {

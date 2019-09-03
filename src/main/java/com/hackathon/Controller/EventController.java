@@ -2,6 +2,7 @@ package com.hackathon.Controller;
 
 import com.hackathon.PO.Event;
 import com.hackathon.Service.EventService;
+import com.hackathon.Util.ResponseResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,8 +20,9 @@ public class EventController {
     private EventService eventService;
     @RequestMapping(value = "/events", method = RequestMethod.GET)
     @ResponseBody
-    public ResponseEntity<Object> showAllEvents () {
-        return new ResponseEntity<Object> (this.eventService.findAll(), HttpStatus.OK);
+    public ResponseEntity<ResponseResult> showAllEvents () {
+        System.out.println("get all events");
+        return new ResponseEntity<ResponseResult> (ResponseResult.success(this.eventService.findAll(),"success"), HttpStatus.OK);
     }
     @RequestMapping(value = "/event", method = RequestMethod.POST)
     @ResponseBody

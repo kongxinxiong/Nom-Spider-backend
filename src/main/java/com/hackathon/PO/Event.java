@@ -25,15 +25,17 @@ public class Event {
     @Column(name = "startDate")
     @NotBlank(message="startDate cannot be empty")
     private Date startDate;
-    @Column(name = "endDate")
-    @NotBlank(message="end date cannot be empty")
-    private Date endDate;
+//    @Column(name = "endDate")
+//    @NotBlank(message="end date cannot be empty")
+//    private Date endDate;
     @Column(name="location")
     private String location;
     @Column(name="description")
     private String description;
     @Column(name="maxNumber")
     private String maxNumber;
+    @Column(name="photoURL")
+    private String photoURL;
     @JsonIgnore
     @ManyToMany(cascade=CascadeType.PERSIST,fetch=FetchType.LAZY)
     @JoinTable(name="event_joint_user_mapping",joinColumns=@JoinColumn(name="eventID"),inverseJoinColumns=@JoinColumn(name="jointUserID"))
@@ -43,6 +45,10 @@ public class Event {
     @ManyToMany(cascade=CascadeType.PERSIST,fetch=FetchType.LAZY)
     @JoinTable(name="event_preference_mapping",joinColumns=@JoinColumn(name="eventID"),inverseJoinColumns=@JoinColumn(name="preferenceID"))
     private Set<Preference> preferences= new HashSet<Preference>();
+
+    @JsonIgnore
+    @ManyToMany(mappedBy="userInterestEvents", fetch = FetchType.LAZY)
+    private Set<User> interestedUsers = new HashSet<>();
 
     public Integer getId() {
         return id;
@@ -68,6 +74,14 @@ public class Event {
         this.title = title;
     }
 
+    public String getPhotoURL() {
+        return photoURL;
+    }
+
+    public void setPhotoURL(String photoURL) {
+        this.photoURL = photoURL;
+    }
+
     public Set<Preference> getPreferences() {
         return preferences;
     }
@@ -84,13 +98,13 @@ public class Event {
         this.startDate = startDate;
     }
 
-    public Date getEndDate() {
-        return endDate;
-    }
-
-    public void setEndDate(Date endDate) {
-        this.endDate = endDate;
-    }
+//    public Date getEndDate() {
+//        return endDate;
+//    }
+//
+//    public void setEndDate(Date endDate) {
+//        this.endDate = endDate;
+//    }
 
     public String getLocation() {
         return location;
@@ -98,6 +112,14 @@ public class Event {
 
     public void setLocation(String location) {
         this.location = location;
+    }
+
+    public Set<User> getInterestedUsers() {
+        return interestedUsers;
+    }
+
+    public void setInterestedUsers(Set<User> interestedUsers) {
+        this.interestedUsers = interestedUsers;
     }
 
     public String getMaxNumber() {

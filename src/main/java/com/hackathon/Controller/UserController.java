@@ -13,10 +13,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.io.*;
 import java.util.HashMap;
 
 @RestController
@@ -93,14 +92,47 @@ public class UserController {
     }
     @RequestMapping(value = "/user/image/{filename}", method = RequestMethod.GET)
     @ResponseBody
-    public ResponseEntity<Object> getUserPhoto (@PathVariable("filename") String filename) {
+    public ResponseEntity<String> getUserPhoto (HttpServletRequest request, HttpServletResponse response, @PathVariable("filename") String filename) {
         String path = Thread.currentThread().getContextClassLoader().getResource("").getPath()+"temp/uploadedFiles/user/";
         File resultFile = new File (path,filename);
         System.out.println("path:"+resultFile.getAbsolutePath());
-        if (resultFile.isFile()) {
-            return new ResponseEntity<>(new FileSystemResource(resultFile),HttpStatus.OK);
-        } else {
-            return new ResponseEntity(ResponseResult.fail("file not found"),HttpStatus.BAD_REQUEST);
+        if (resultFile.exists()) {
+            response.setContentType("application/force-download");// 设置强制下载不打开
+            response.addHeader("Content-Disposition", "attachment;fileName=" + filename);// 设置文件名
+            response.setContentType("multipart/form-data;charset=UTF-8");
+            response.setHeader("Content-Disposition", "attachment;fileName="+ filename);
+            byte[] buffer = new byte[1024];
+            FileInputStream fis = null;
+            BufferedInputStream bis = null;
+            try {
+                fis = new FileInputStream(resultFile);
+                bis = new BufferedInputStream(fis);
+                OutputStream os = response.getOutputStream();
+                int i = bis.read(buffer);
+                while (i != -1) {
+                    os.write(buffer, 0, i);
+                    i = bis.read(buffer);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                if (bis != null) {
+                    try {
+                        bis.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+                if (fis != null) {
+                    try {
+                        fis.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+            return new ResponseEntity<String>("success",HttpStatus.OK);
         }
+        return new ResponseEntity<String>("cannot download this file",HttpStatus.OK);
     }
 }
