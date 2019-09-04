@@ -88,8 +88,8 @@ public class EventController {
         return new ResponseEntity<ResponseResult> (ResponseResult.success(null,"success"),HttpStatus.OK);
     }
 
-@RequestMapping(value = "event/image", method = RequestMethod.POST)
-public ResponseEntity<ResponseResult> uploadUserImage (@RequestParam("uploadFile") MultipartFile file) {
+@RequestMapping(value = "/event/image", method = RequestMethod.POST)
+public ResponseEntity<ResponseResult> uploadUserImage (@RequestParam("file") MultipartFile file) {
     try {
         String fileName = System.currentTimeMillis() + file.getOriginalFilename();
         String path = Thread.currentThread().getContextClassLoader().getResource("").getPath()+"temp/uploadedFiles/event/";

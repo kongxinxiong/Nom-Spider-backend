@@ -8,6 +8,7 @@ import com.hackathon.Service.UserService;
 import com.hackathon.Util.POToVO;
 import com.hackathon.Util.ResponseResult;
 import com.hackathon.VO.UserEventVO;
+import com.hackathon.VO.UserRanking;
 import com.hackathon.VO.UserVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -94,8 +95,8 @@ public class UserController {
         }
         return new ResponseEntity<ResponseResult>(ResponseResult.fail("invalid username or password"), HttpStatus.BAD_REQUEST);
     }
-    @RequestMapping(value = "user/image", method = RequestMethod.POST)
-    public ResponseEntity<ResponseResult> uploadUserImage (@RequestParam("uploadFile") MultipartFile file) {
+    @RequestMapping(value = "/user/image", method = RequestMethod.POST)
+    public ResponseEntity<ResponseResult> uploadUserImage (@RequestParam("file") MultipartFile file) {
         try {
             String fileName = System.currentTimeMillis() + file.getOriginalFilename();
             String path = Thread.currentThread().getContextClassLoader().getResource("").getPath()+"temp/uploadedFiles/user/";
@@ -216,12 +217,26 @@ public class UserController {
     @ResponseBody
     public ResponseEntity<ResponseResult> getUserRanking () {
         List<User> userList = this.userService.findAll();
-//        Set<Event> eventList = user.get().getUserInterestEvents();
         HashMap<String,String> map = new HashMap<>();
+        ArrayList<UserRanking> userRankings = new ArrayList<>();
         for (User user : userList) {
             int score = user.getUserCreatedEvents().size()*20 + user.getUserJointEvents().size()*10;
             map.put(user.getName(),String.valueOf(score));
         }
-        return new ResponseEntity<ResponseResult> (ResponseResult.success(map,"success"), HttpStatus.OK);
+
+//        map.entrySet().stream().sorted(Collections.reverseOrder(Map.Entry.comparingByValue())).forEach(System.out::println);
+        List<Map.Entry<String,String>> tmpList = map.entrySet().stream().sorted(Collections.reverseOrder(Map.Entry.comparingByValue())).collect(Collectors.toList());
+        int i=1;
+        for (Map.Entry<String,String> entry: tmpList) {
+            UserRanking userRanking = new UserRanking();
+            userRanking.setRank(i++);
+            userRanking.setName(entry.getKey());
+            userRanking.setScore(entry.getValue());
+            userRankings.add(userRanking);
+            if (i==10) {
+                break;
+            }
+        }
+        return new ResponseEntity<ResponseResult> (ResponseResult.success(userRankings,"success"), HttpStatus.OK);
     }
 }
