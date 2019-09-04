@@ -1,8 +1,10 @@
 package com.hackathon.Controller;
 
 import com.hackathon.PO.Event;
+import com.hackathon.PO.Preference;
 import com.hackathon.PO.User;
 import com.hackathon.Service.EventService;
+import com.hackathon.Service.PreferenceService;
 import com.hackathon.Service.UserService;
 import com.hackathon.Util.ResponseResult;
 import com.hackathon.VO.UserEventVO;
@@ -26,6 +28,8 @@ public class EventController {
     private EventService eventService;
     @Autowired
     private UserService userService;
+    @Autowired
+    private PreferenceService preferenceService;
     @RequestMapping(value = "/events", method = RequestMethod.GET)
     @ResponseBody
     public ResponseEntity<ResponseResult> showAllEvents () {

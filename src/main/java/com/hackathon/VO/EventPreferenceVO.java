@@ -1,16 +1,15 @@
 package com.hackathon.VO;
 
-public class UserPreferenceVO {
-
-    private Integer userID;
+public class EventPreferenceVO {
+    private Integer eventID;
     private Integer preferenceID;
 
-    public Integer getUserID() {
-        return userID;
+    public Integer getEventID() {
+        return eventID;
     }
 
-    public void setUserID(Integer userID) {
-        this.userID = userID;
+    public void setEventID(Integer eventID) {
+        this.eventID = eventID;
     }
 
     public Integer getPreferenceID() {

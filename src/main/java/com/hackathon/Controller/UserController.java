@@ -3,14 +3,13 @@ package com.hackathon.Controller;
 import com.hackathon.PO.Event;
 import com.hackathon.PO.User;
 import com.hackathon.Service.EventService;
+import com.hackathon.Service.PreferenceService;
 import com.hackathon.Service.UserService;
 import com.hackathon.Util.ResponseResult;
 import com.hackathon.VO.UserEventVO;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -20,7 +19,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.*;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -31,6 +29,8 @@ public class UserController {
     private UserService userService;
     @Autowired
     private EventService eventService;
+    @Autowired
+    private PreferenceService preferenceService;
 
     @RequestMapping(value = "/users", method = RequestMethod.GET)
     @ResponseBody

@@ -1,7 +1,9 @@
 package com.hackathon.Controller;
 
 import com.hackathon.PO.Preference;
+import com.hackathon.Service.EventService;
 import com.hackathon.Service.PreferenceService;
+import com.hackathon.Service.UserService;
 import com.hackathon.Util.ResponseResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,7 +17,12 @@ import javax.validation.Valid;
 @RequestMapping("api")
 public class PreferenceController {
     @Autowired
+    private EventService eventService;
+    @Autowired
+    private UserService userService;
+    @Autowired
     private PreferenceService preferenceService;
+
     @RequestMapping(value = "/preferences", method = RequestMethod.GET)
     @ResponseBody
     public ResponseEntity<ResponseResult> showAllPreference() {

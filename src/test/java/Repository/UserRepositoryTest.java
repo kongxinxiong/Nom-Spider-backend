@@ -34,7 +34,7 @@ public class UserRepositoryTest {
         user.setLocation("Hong Kong");
         Event event = new Event();
         event.setTitle("hackathon event");
-        user.getJointEvents().add(event);
+        user.getUserJointEvents().add(event);
 //        event.setUser(user);
         Preference preference = new Preference();
         preference.setName("party");
