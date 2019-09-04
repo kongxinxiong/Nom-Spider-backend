@@ -6,7 +6,9 @@ import com.hackathon.PO.User;
 import com.hackathon.Service.EventService;
 import com.hackathon.Service.PreferenceService;
 import com.hackathon.Service.UserService;
+import com.hackathon.Util.POToVO;
 import com.hackathon.Util.ResponseResult;
+import com.hackathon.VO.EventVO;
 import com.hackathon.VO.UserEventVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,9 +21,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.*;
-import java.util.Date;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @RestController
@@ -43,7 +43,13 @@ public class EventController {
     @ResponseBody
     public ResponseEntity<ResponseResult> showAllComingEvents () {
         System.out.println("get all coming events");
-        Set<Event> eventSet = this.eventService.findAll().stream().filter(t->t.getStartDate().getTime()>new Date().getTime()).collect(Collectors.toSet());
+        Set<Event> eventSet = this.eventService.findAll().stream().filter(t->{
+            if (t.getStartDate()!=null && t.getStartDate().getTime()>new Date().getTime()){
+                return true;
+            } else {
+                return false;
+            }
+        }).collect(Collectors.toSet());
         return new ResponseEntity<ResponseResult> (ResponseResult.success(eventSet,"success"), HttpStatus.OK);
     }
     @RequestMapping(value = "/event", method = RequestMethod.POST)
@@ -65,9 +71,11 @@ public class EventController {
     @RequestMapping(value = "/event/{id}", method = RequestMethod.GET)
     @ResponseBody
     public ResponseEntity<ResponseResult> getEventById(@PathVariable("id") Integer id) {
+        System.out.println("getEventById:"+id);
         Optional<Event> event = this.eventService.findById(id);
         if (event.isPresent()) {
-            return new ResponseEntity<ResponseResult>(ResponseResult.success(event,"success"), HttpStatus.OK);
+            EventVO eventVO = POToVO.eventPOToVO(event.get());
+            return new ResponseEntity<ResponseResult>(ResponseResult.success(eventVO,"success"), HttpStatus.OK);
         }
         else {
             return new ResponseEntity<ResponseResult>(ResponseResult.fail("Event not found."), HttpStatus.OK);
@@ -156,5 +164,20 @@ public ResponseEntity<ResponseResult> uploadUserImage (@RequestParam("uploadFile
             return new ResponseEntity<ResponseResult> (ResponseResult.success(userEventVO,"success"), HttpStatus.OK);
         }
         return new ResponseEntity<ResponseResult> (ResponseResult.fail("userID or eventID not available."),HttpStatus.BAD_REQUEST);
+    }
+    @RequestMapping(value = "/event/eventJointUsers/{id}", method = RequestMethod.GET)
+    @ResponseBody
+    public ResponseEntity<ResponseResult> getEventJointUsers(@PathVariable("id") Integer id) {
+        Optional<Event> event = this.eventService.findById(id);
+        if (event.isPresent()) {
+            Set<User> userList = event.get().getEventJointUsers();
+            Set<String> userNames = new HashSet<>();
+            for (User user:userList) {
+                userNames.add(user.getName());
+            }
+            return new ResponseEntity<ResponseResult> (ResponseResult.success(userNames,"success"),HttpStatus.OK);
+        } else {
+            return new ResponseEntity<ResponseResult> (ResponseResult.fail("no event found"),HttpStatus.OK);
+        }
     }
 }

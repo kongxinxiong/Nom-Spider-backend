@@ -5,8 +5,10 @@ import com.hackathon.PO.User;
 import com.hackathon.Service.EventService;
 import com.hackathon.Service.PreferenceService;
 import com.hackathon.Service.UserService;
+import com.hackathon.Util.POToVO;
 import com.hackathon.Util.ResponseResult;
 import com.hackathon.VO.UserEventVO;
+import com.hackathon.VO.UserVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,10 +20,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.*;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @RestController
@@ -68,8 +67,12 @@ public class UserController {
     @ResponseBody
     public ResponseEntity<ResponseResult> getUserById (@PathVariable("id") Integer id) {
         Optional<User> user = this.userService.findById(id);
+
+        System.out.println("getUserByid:"+user.get().toString());
         if (user.isPresent()) {
-            return new ResponseEntity<ResponseResult> (ResponseResult.success(user,"success"), HttpStatus.OK);
+            UserVO userVO = POToVO.userPOToVO(user.get());
+            System.out.println("userVO:"+userVO.toString());
+            return new ResponseEntity<ResponseResult> (ResponseResult.success(userVO,"success"), HttpStatus.OK);
         } else {
             return new ResponseEntity<>(ResponseResult.fail("user not found"),HttpStatus.BAD_REQUEST);
         }
@@ -208,5 +211,17 @@ public class UserController {
             return new ResponseEntity<ResponseResult> (ResponseResult.success(userEventVO,"success"), HttpStatus.OK);
         }
         return new ResponseEntity<ResponseResult> (ResponseResult.fail("userID or eventID not available."),HttpStatus.BAD_REQUEST);
+    }
+    @RequestMapping(value = "/user/userRanking/", method = RequestMethod.GET)
+    @ResponseBody
+    public ResponseEntity<ResponseResult> getUserRanking () {
+        List<User> userList = this.userService.findAll();
+//        Set<Event> eventList = user.get().getUserInterestEvents();
+        HashMap<String,String> map = new HashMap<>();
+        for (User user : userList) {
+            int score = user.getUserCreatedEvents().size()*20 + user.getUserJointEvents().size()*10;
+            map.put(user.getName(),String.valueOf(score));
+        }
+        return new ResponseEntity<ResponseResult> (ResponseResult.success(map,"success"), HttpStatus.OK);
     }
 }

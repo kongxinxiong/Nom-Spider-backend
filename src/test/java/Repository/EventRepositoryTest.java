@@ -22,12 +22,14 @@ public class EventRepositoryTest {
     @Ignore
     public void save(){
         Event event = new Event();
-        event.setTitle("Test Event");
+        event.setTitle("Event ID2");
+        event.setStartDate(new Date());
         User user = new User();
         user.setBirthday(new Date());
-        user.setName("name");
+        user.setName("wudan");
         user.setEmail("asdasd@hackathon.com");
-        event.setEventCreator(user);
+        event.getEventJointUsers().add(user);
+//        event.setEventCreator(user);
         this.eventRepository.save(event);
     }
     @Test

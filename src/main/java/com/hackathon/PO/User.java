@@ -154,7 +154,11 @@ public class User {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", birthday=" + birthday +
+                ", location='" + location + '\'' +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
                 ", email='" + email + '\'' +
+                ", photoURL='" + photoURL + '\'' +
                 '}';
     }
 }

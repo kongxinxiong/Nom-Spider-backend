@@ -23,15 +23,16 @@ public class UserRepositoryTest {
     @Autowired
     private UserRepository userRepository;
     @Test
-    @Ignore
+//    @Ignore
     public void save() {
         User user = new User();
-        user.setEmail("ella@hackathon.com");
-        user.setUsername("Ella username");
-        user.setPassword("password");
+        user.setEmail("tom@hackathon.com");
+        user.setUsername("tom");
+        user.setPassword("tom");
         user.setBirthday(new Date());
-        user.setName("mark");
-        user.setLocation("Hong Kong");
+        user.setName("Tom Ford");
+        user.setLocation("Shanghai");
+        user.setPhotoURL("1567483561698test_img.jpg");
         Event event = new Event();
         event.setTitle("hackathon event");
         user.getUserJointEvents().add(event);

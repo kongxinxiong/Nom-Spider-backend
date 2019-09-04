@@ -23,7 +23,7 @@ public class Event {
     @JoinColumn(name = "userID")
     private User eventCreator;
     @Column(name = "startDate")
-    @NotBlank(message="startDate cannot be empty")
+//    @NotBlank(message="startDate cannot be empty")
     private Date startDate;
 //    @Column(name = "endDate")
 //    @NotBlank(message="end date cannot be empty")
