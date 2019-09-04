@@ -1,8 +1,11 @@
 package com.hackathon.Controller;
 
 import com.hackathon.PO.Event;
+import com.hackathon.PO.User;
 import com.hackathon.Service.EventService;
+import com.hackathon.Service.UserService;
 import com.hackathon.Util.ResponseResult;
+import com.hackathon.VO.UserEventVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +24,8 @@ import java.util.Optional;
 public class EventController {
     @Autowired
     private EventService eventService;
+    @Autowired
+    private UserService userService;
     @RequestMapping(value = "/events", method = RequestMethod.GET)
     @ResponseBody
     public ResponseEntity<ResponseResult> showAllEvents () {
@@ -125,5 +130,17 @@ public ResponseEntity<ResponseResult> uploadUserImage (@RequestParam("uploadFile
             return new ResponseEntity<String>("success",HttpStatus.OK);
         }
         return new ResponseEntity<String>("cannot download this file",HttpStatus.OK);
+    }
+    @RequestMapping(value = "/event/jointUser/", method = RequestMethod.POST)
+    @ResponseBody
+    public ResponseEntity<ResponseResult> addEventJointUser (@RequestBody UserEventVO userEventVO) {
+        Optional<User> user = this.userService.findById(userEventVO.getUserID());
+        Optional<Event> event = this.eventService.findById(userEventVO.getEventID());
+        if (user.isPresent() && event.isPresent()) {
+            user.get().getUserJointEvents().add(event.get());
+            this.userService.save(user.get());
+            return new ResponseEntity<ResponseResult> (ResponseResult.success(userEventVO,"success"), HttpStatus.OK);
+        }
+        return new ResponseEntity<ResponseResult> (ResponseResult.fail("userID or eventID not available."),HttpStatus.BAD_REQUEST);
     }
 }

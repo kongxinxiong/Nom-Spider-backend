@@ -1,8 +1,11 @@
 package com.hackathon.Controller;
 
+import com.hackathon.PO.Event;
 import com.hackathon.PO.User;
+import com.hackathon.Service.EventService;
 import com.hackathon.Service.UserService;
 import com.hackathon.Util.ResponseResult;
+import com.hackathon.VO.UserEventVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.HttpStatus;
@@ -17,13 +20,17 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.*;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @RestController
 @RequestMapping("api")
 public class UserController {
     @Autowired
     private UserService userService;
+    @Autowired
+    private EventService eventService;
 
     @RequestMapping(value = "/users", method = RequestMethod.GET)
     @ResponseBody
@@ -146,5 +153,51 @@ public class UserController {
             return new ResponseEntity<String>("success",HttpStatus.OK);
         }
         return new ResponseEntity<String>("cannot download this file",HttpStatus.OK);
+    }
+    @RequestMapping(value = "/user/userCreatedEvents/{id}", method = RequestMethod.GET)
+    @ResponseBody
+    public ResponseEntity<ResponseResult> getUserCreatedEvents (@PathVariable("id") Integer id) {
+        Optional<User> user = this.userService.findById(id);
+        Set<Event> eventList = user.get().getUserCreatedEvents();
+        return new ResponseEntity<ResponseResult> (ResponseResult.success(eventList,"success"), HttpStatus.OK);
+    }
+    @RequestMapping(value = "/user/userJointEvents/{id}", method = RequestMethod.GET)
+    @ResponseBody
+    public ResponseEntity<ResponseResult> getUserJointEvents (@PathVariable("id") Integer id) {
+        Optional<User> user = this.userService.findById(id);
+        Set<Event> eventList = user.get().getUserJointEvents();
+        return new ResponseEntity<ResponseResult> (ResponseResult.success(eventList,"success"), HttpStatus.OK);
+    }
+    @RequestMapping(value = "/user/userInterestEvents/{id}", method = RequestMethod.GET)
+    @ResponseBody
+    public ResponseEntity<ResponseResult> getUserInterestEvents (@PathVariable("id") Integer id) {
+        Optional<User> user = this.userService.findById(id);
+        Set<Event> eventList = user.get().getUserInterestEvents();
+        return new ResponseEntity<ResponseResult> (ResponseResult.success(eventList,"success"), HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/user/favorateEvent/", method = RequestMethod.POST)
+    @ResponseBody
+    public ResponseEntity<ResponseResult> addUserFavorateEvents (@RequestBody UserEventVO userEventVO) {
+        Optional<User> user = this.userService.findById(userEventVO.getUserID());
+        Optional<Event> event = this.eventService.findById(userEventVO.getEventID());
+        if (user.isPresent() && event.isPresent()) {
+            user.get().getUserInterestEvents().add(event.get());
+            this.userService.save(user.get());
+            return new ResponseEntity<ResponseResult> (ResponseResult.success(userEventVO,"success"), HttpStatus.OK);
+        }
+        return new ResponseEntity<ResponseResult> (ResponseResult.fail("userID or eventID not available."),HttpStatus.BAD_REQUEST);
+    }
+    @RequestMapping(value = "/user/jointEvent/", method = RequestMethod.POST)
+    @ResponseBody
+    public ResponseEntity<ResponseResult> addUserJointEvents (@RequestBody UserEventVO userEventVO) {
+        Optional<User> user = this.userService.findById(userEventVO.getUserID());
+        Optional<Event> event = this.eventService.findById(userEventVO.getEventID());
+        if (user.isPresent() && event.isPresent()) {
+            user.get().getUserJointEvents().add(event.get());
+            this.userService.save(user.get());
+            return new ResponseEntity<ResponseResult> (ResponseResult.success(userEventVO,"success"), HttpStatus.OK);
+        }
+        return new ResponseEntity<ResponseResult> (ResponseResult.fail("userID or eventID not available."),HttpStatus.BAD_REQUEST);
     }
 }

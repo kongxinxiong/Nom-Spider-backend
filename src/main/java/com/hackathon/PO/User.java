@@ -45,7 +45,7 @@ public class User {
 
     @JsonIgnore
     @ManyToMany(mappedBy="eventJointUsers", fetch = FetchType.LAZY)
-    private Set<Event> jointEvents = new HashSet<>();
+    private Set<Event> userJointEvents = new HashSet<>();
 
     @JsonIgnore
     @ManyToMany(cascade=CascadeType.PERSIST,fetch=FetchType.LAZY)
@@ -116,12 +116,12 @@ public class User {
         this.email = email;
     }
 
-    public Set<Event> getJointEvents() {
-        return jointEvents;
+    public Set<Event> getUserJointEvents() {
+        return userJointEvents;
     }
 
-    public void setJointEvents(Set<Event> jointEvents) {
-        this.jointEvents = jointEvents;
+    public void setUserJointEvents(Set<Event> userJointEvents) {
+        this.userJointEvents = userJointEvents;
     }
 
     public String getLocation() {
