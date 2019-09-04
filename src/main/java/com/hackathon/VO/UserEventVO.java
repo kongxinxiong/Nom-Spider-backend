@@ -1,22 +1,22 @@
 package com.hackathon.VO;
 
 public class UserEventVO {
-    private Integer userID;
-    private Integer eventID;
+    private String userID;
+    private String eventID;
 
-    public Integer getUserID() {
+    public String getUserID() {
         return userID;
     }
 
-    public void setUserID(Integer userID) {
+    public void setUserID(String userID) {
         this.userID = userID;
     }
 
-    public Integer getEventID() {
+    public String getEventID() {
         return eventID;
     }
 
-    public void setEventID(Integer eventID) {
+    public void setEventID(String eventID) {
         this.eventID = eventID;
     }
 }

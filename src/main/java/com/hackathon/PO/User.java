@@ -159,6 +159,10 @@ public class User {
                 ", password='" + password + '\'' +
                 ", email='" + email + '\'' +
                 ", photoURL='" + photoURL + '\'' +
+                ", userCreatedEvents=" + userCreatedEvents +
+                ", userJointEvents=" + userJointEvents +
+                ", preferences=" + preferences +
+                ", userInterestEvents=" + userInterestEvents +
                 '}';
     }
 }

@@ -43,6 +43,7 @@ public class UserController {
     @RequestMapping(value = "/user", method = RequestMethod.POST)
     @ResponseBody
     public ResponseEntity<ResponseResult> addUser (@RequestBody @Valid User user, BindingResult result) {
+        System.out.println("addUser:"+user.toString());
         if (result.hasErrors()) {
             return new ResponseEntity<ResponseResult>(ResponseResult.fail(result.getFieldError().getDefaultMessage()), HttpStatus.BAD_REQUEST);
         }
@@ -192,8 +193,9 @@ public class UserController {
     @RequestMapping(value = "/user/favorateEvent/", method = RequestMethod.POST)
     @ResponseBody
     public ResponseEntity<ResponseResult> addUserFavorateEvents (@RequestBody UserEventVO userEventVO) {
-        Optional<User> user = this.userService.findById(userEventVO.getUserID());
-        Optional<Event> event = this.eventService.findById(userEventVO.getEventID());
+        System.out.println("addUserFavorateEvents");
+        Optional<User> user = this.userService.findById(Integer.valueOf(userEventVO.getUserID()));
+        Optional<Event> event = this.eventService.findById(Integer.valueOf(userEventVO.getEventID()));
         if (user.isPresent() && event.isPresent()) {
             user.get().getUserInterestEvents().add(event.get());
             this.userService.save(user.get());
@@ -204,8 +206,8 @@ public class UserController {
     @RequestMapping(value = "/user/jointEvent/", method = RequestMethod.POST)
     @ResponseBody
     public ResponseEntity<ResponseResult> addUserJointEvents (@RequestBody UserEventVO userEventVO) {
-        Optional<User> user = this.userService.findById(userEventVO.getUserID());
-        Optional<Event> event = this.eventService.findById(userEventVO.getEventID());
+        Optional<User> user = this.userService.findById(Integer.valueOf(userEventVO.getUserID()));
+        Optional<Event> event = this.eventService.findById(Integer.valueOf(userEventVO.getEventID()));
         if (user.isPresent() && event.isPresent()) {
             user.get().getUserJointEvents().add(event.get());
             this.userService.save(user.get());
@@ -216,6 +218,7 @@ public class UserController {
     @RequestMapping(value = "/user/userRanking/", method = RequestMethod.GET)
     @ResponseBody
     public ResponseEntity<ResponseResult> getUserRanking () {
+        System.out.println("get user ranking.");
         List<User> userList = this.userService.findAll();
         HashMap<String,String> map = new HashMap<>();
         ArrayList<UserRanking> userRankings = new ArrayList<>();
@@ -229,7 +232,7 @@ public class UserController {
         int i=1;
         for (Map.Entry<String,String> entry: tmpList) {
             UserRanking userRanking = new UserRanking();
-            userRanking.setRank(i++);
+            userRanking.setRank(String.valueOf(i++));
             userRanking.setName(entry.getKey());
             userRanking.setScore(entry.getValue());
             userRankings.add(userRanking);
@@ -238,5 +241,41 @@ public class UserController {
             }
         }
         return new ResponseEntity<ResponseResult> (ResponseResult.success(userRankings,"success"), HttpStatus.OK);
+    }
+    @RequestMapping(value = "/user/userJointParticularEvents/", method = RequestMethod.GET)
+    @ResponseBody
+    public ResponseEntity<ResponseResult> getUserJointParticularEvents (@RequestBody UserEventVO userEventVO) {
+        System.out.println("getUserJointParticularEvents");
+        Optional<User> user = this.userService.findById(Integer.valueOf(userEventVO.getUserID()));
+        Optional<Event> event = this.eventService.findById(Integer.valueOf(userEventVO.getEventID()));
+        if (user.isPresent() && event.isPresent()) {
+            HashMap<String,String> tmp = new HashMap<>();
+            if (user.get().getUserJointEvents().contains(event)) {
+                tmp.put("status","true");
+                return new ResponseEntity<ResponseResult> (ResponseResult.success(tmp,"success"), HttpStatus.OK);
+            } else {
+                tmp.put("status","false");
+                return new ResponseEntity<ResponseResult> (ResponseResult.success(tmp,"success"), HttpStatus.OK);
+            }
+        }
+        return new ResponseEntity<ResponseResult> (ResponseResult.fail("userID or eventID not available."),HttpStatus.BAD_REQUEST);
+    }
+    @RequestMapping(value = "/user/userInterestParticularEvents/", method = RequestMethod.GET)
+    @ResponseBody
+    public ResponseEntity<ResponseResult> getUserInterestParticularEvents (@RequestBody UserEventVO userEventVO) {
+        System.out.println("getUserInterestParticularEvents");
+        Optional<User> user = this.userService.findById(Integer.valueOf(userEventVO.getUserID()));
+        Optional<Event> event = this.eventService.findById(Integer.valueOf(userEventVO.getEventID()));
+        if (user.isPresent() && event.isPresent()) {
+            HashMap<String,String> tmp = new HashMap<>();
+            if (user.get().getUserInterestEvents().contains(event)) {
+                tmp.put("status","true");
+                return new ResponseEntity<ResponseResult> (ResponseResult.success(tmp,"success"), HttpStatus.OK);
+            } else {
+                tmp.put("status","false");
+                return new ResponseEntity<ResponseResult> (ResponseResult.success(tmp,"success"), HttpStatus.OK);
+            }
+        }
+        return new ResponseEntity<ResponseResult> (ResponseResult.fail("userID or eventID not available."),HttpStatus.BAD_REQUEST);
     }
 }

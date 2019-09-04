@@ -156,8 +156,8 @@ public ResponseEntity<ResponseResult> uploadUserImage (@RequestParam("file") Mul
     @RequestMapping(value = "/event/jointUser/", method = RequestMethod.POST)
     @ResponseBody
     public ResponseEntity<ResponseResult> addEventJointUser (@RequestBody UserEventVO userEventVO) {
-        Optional<User> user = this.userService.findById(userEventVO.getUserID());
-        Optional<Event> event = this.eventService.findById(userEventVO.getEventID());
+        Optional<User> user = this.userService.findById(Integer.valueOf(userEventVO.getUserID()));
+        Optional<Event> event = this.eventService.findById(Integer.valueOf(userEventVO.getEventID()));
         if (user.isPresent() && event.isPresent()) {
             user.get().getUserJointEvents().add(event.get());
             this.userService.save(user.get());

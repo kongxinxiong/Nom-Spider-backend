@@ -1,15 +1,15 @@
 package com.hackathon.VO;
 
 public class UserRanking {
-    private Integer rank;
+    private String rank;
     private String name;
     private String score;
 
-    public Integer getRank() {
+    public String getRank() {
         return rank;
     }
 
-    public void setRank(Integer rank) {
+    public void setRank(String rank) {
         this.rank = rank;
     }
 
