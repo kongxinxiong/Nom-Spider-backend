@@ -18,9 +18,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.*;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("api")
@@ -166,6 +168,13 @@ public class UserController {
     public ResponseEntity<ResponseResult> getUserJointEvents (@PathVariable("id") Integer id) {
         Optional<User> user = this.userService.findById(id);
         Set<Event> eventList = user.get().getUserJointEvents();
+        return new ResponseEntity<ResponseResult> (ResponseResult.success(eventList,"success"), HttpStatus.OK);
+    }
+    @RequestMapping(value = "/user/userJointComingEvents/{id}", method = RequestMethod.GET)
+    @ResponseBody
+    public ResponseEntity<ResponseResult> getUserJointComingEvents (@PathVariable("id") Integer id) {
+        Optional<User> user = this.userService.findById(id);
+        Set<Event> eventList = user.get().getUserJointEvents().stream().filter(t->t.getStartDate().getTime()>new Date().getTime()).collect(Collectors.toSet());
         return new ResponseEntity<ResponseResult> (ResponseResult.success(eventList,"success"), HttpStatus.OK);
     }
     @RequestMapping(value = "/user/userInterestEvents/{id}", method = RequestMethod.GET)

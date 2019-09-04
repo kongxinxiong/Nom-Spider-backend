@@ -19,7 +19,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.*;
+import java.util.Date;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("api")
@@ -35,6 +38,13 @@ public class EventController {
     public ResponseEntity<ResponseResult> showAllEvents () {
         System.out.println("get all events");
         return new ResponseEntity<ResponseResult> (ResponseResult.success(this.eventService.findAll(),"success"), HttpStatus.OK);
+    }
+    @RequestMapping(value = "/comingEvents", method = RequestMethod.GET)
+    @ResponseBody
+    public ResponseEntity<ResponseResult> showAllComingEvents () {
+        System.out.println("get all coming events");
+        Set<Event> eventSet = this.eventService.findAll().stream().filter(t->t.getStartDate().getTime()>new Date().getTime()).collect(Collectors.toSet());
+        return new ResponseEntity<ResponseResult> (ResponseResult.success(eventSet,"success"), HttpStatus.OK);
     }
     @RequestMapping(value = "/event", method = RequestMethod.POST)
     @ResponseBody
