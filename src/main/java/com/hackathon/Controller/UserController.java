@@ -201,7 +201,7 @@ public class UserController {
         System.out.println("getUserJoint7DaysComingEvents");
         Optional<User> user = this.userService.findById(id);
         long nd = 1000 * 24 * 60 * 60;
-        Set<Event> eventList = user.get().getUserJointEvents().stream().filter(t->(t.getStartDate().getTime()-new Date().getTime()/nd) >= 7).collect(Collectors.toSet());
+        Set<Event> eventList = user.get().getUserJointEvents().stream().filter(t->(t.getStartDate().getTime()-new Date().getTime()/nd) <= 7).collect(Collectors.toSet());
         return new ResponseEntity<ResponseResult> (ResponseResult.success(eventList,"success"), HttpStatus.OK);
     }
     @RequestMapping(value = "/user/userJointHistoryEvents/{id}", method = RequestMethod.GET)
