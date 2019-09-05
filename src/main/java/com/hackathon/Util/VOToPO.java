@@ -1,10 +1,12 @@
 package com.hackathon.Util;
 
+import com.hackathon.PO.Event;
 import com.hackathon.PO.Preference;
 import com.hackathon.PO.User;
 import com.hackathon.Service.EventService;
 import com.hackathon.Service.PreferenceService;
 import com.hackathon.Service.UserService;
+import com.hackathon.VO.EventVO;
 import com.hackathon.VO.UserVO;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -28,6 +30,22 @@ public class VOToPO {
                 user.getPreferences().add(preferenceService.findById(Integer.valueOf(id)).get());
             }
             return user;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+    public static Event eventVOToPO (EventVO eventVO, Event event, PreferenceService preferenceService, UserService userService) {
+        try {
+            event.setTitle(eventVO.getTitle());
+            event.setDescription(eventVO.getDescription());
+            event.setPhotoURL(eventVO.getPhotoURL());
+            event.setMaxNumber(eventVO.getMaxNumber());
+            event.setEventCreator(userService.findById(eventVO.getEventCreator()).get());
+            event.setStartDate(sdf.parse(eventVO.getStartDate()));
+            for (String id:eventVO.getPreferences()) {
+                event.getPreferences().add(preferenceService.findById(Integer.valueOf(id)).get());
+            }
+            return event;
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

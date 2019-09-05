@@ -8,6 +8,7 @@ import com.hackathon.Service.PreferenceService;
 import com.hackathon.Service.UserService;
 import com.hackathon.Util.POToVO;
 import com.hackathon.Util.ResponseResult;
+import com.hackathon.Util.VOToPO;
 import com.hackathon.VO.EventVO;
 import com.hackathon.VO.UserEventVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,10 +55,11 @@ public class EventController {
     }
     @RequestMapping(value = "/event", method = RequestMethod.POST)
     @ResponseBody
-    public ResponseEntity<ResponseResult> addPreference(@RequestBody @Valid Event event, BindingResult result) {
+    public ResponseEntity<ResponseResult> addPreference(@RequestBody @Valid EventVO eventVO, BindingResult result) {
         if (result.hasErrors()) {
             return new ResponseEntity<ResponseResult>(ResponseResult.fail(result.getFieldError().getDefaultMessage()), HttpStatus.BAD_REQUEST);
         }
+        Event event = VOToPO.eventVOToPO(eventVO,new Event(),preferenceService,userService);
         return new ResponseEntity<ResponseResult> (ResponseResult.success(this.eventService.save(event),"success"),HttpStatus.OK);
     }
     @RequestMapping(value = "/event", method = RequestMethod.PUT)
@@ -89,8 +91,10 @@ public class EventController {
     }
 
 @RequestMapping(value = "/event/image", method = RequestMethod.POST)
-public ResponseEntity<ResponseResult> uploadUserImage (@RequestParam("file") MultipartFile file) {
+public ResponseEntity<ResponseResult> uploadUserImage ( @RequestParam("file") MultipartFile file) {
     try {
+        System.out.println(file);
+        System.out.println("file");
         String fileName = System.currentTimeMillis() + file.getOriginalFilename();
         String path = Thread.currentThread().getContextClassLoader().getResource("").getPath()+"temp/uploadedFiles/event/";
         String destFileName = path + fileName;
