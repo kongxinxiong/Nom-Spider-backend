@@ -294,12 +294,18 @@ public class UserController {
         Optional<User> user = this.userService.findById(Integer.valueOf(userEventVO.getUserID()));
         Optional<Event> event = this.eventService.findById(Integer.valueOf(userEventVO.getEventID()));
         if (user.isPresent() && event.isPresent()) {
-            HashMap<String,String> tmp = new HashMap<>();
-            if (user.get().getUserJointEvents().contains(event)) {
-                tmp.put("status","true");
+            HashMap<String,Boolean> tmp = new HashMap<>();
+            user.get().getUserJointEvents().stream().forEach(x -> System.out.println("+++++++++++++++++++++++++++"+x.getId() + ' ' + x.getTitle() + " " +x.hashCode()));
+            System.out.println("================"+user.get().getUserJointEvents());
+            System.out.println("**********************************"+event.hashCode());
+            if (event.get().includedIn(user.get().getUserJointEvents())) {
+//            if (user.get().getUserJointEvents().contains(event)) {
+                tmp.put("status",true);
+                System.out.println("============getUserJointParticularEvents:true");
                 return new ResponseEntity<ResponseResult> (ResponseResult.success(tmp,"success"), HttpStatus.OK);
             } else {
-                tmp.put("status","false");
+                tmp.put("status",false);
+                System.out.println("============getUserJointParticularEvents:false");
                 return new ResponseEntity<ResponseResult> (ResponseResult.success(tmp,"success"), HttpStatus.OK);
             }
         }
@@ -311,13 +317,18 @@ public class UserController {
         System.out.println("getUserInterestParticularEvents");
         Optional<User> user = this.userService.findById(Integer.valueOf(userEventVO.getUserID()));
         Optional<Event> event = this.eventService.findById(Integer.valueOf(userEventVO.getEventID()));
+        System.out.println("==============getUserInterestParticularEvents: "+user.isPresent() + event.isPresent());
         if (user.isPresent() && event.isPresent()) {
-            HashMap<String,String> tmp = new HashMap<>();
-            if (user.get().getUserInterestEvents().contains(event)) {
-                tmp.put("status","true");
+            HashMap<String,Boolean> tmp = new HashMap<>();
+            System.out.println("================"+user.get().getUserInterestEvents());
+            if (event.get().includedIn(user.get().getUserInterestEvents())) {
+//            if (user.get().getUserInterestEvents().contains(event)) {
+                tmp.put("status",true);
+                System.out.println("============getUserInterestParticularEvents:true");
                 return new ResponseEntity<ResponseResult> (ResponseResult.success(tmp,"success"), HttpStatus.OK);
             } else {
-                tmp.put("status","false");
+                tmp.put("status",false);
+                System.out.println("============getUserInterestParticularEvents:false");
                 return new ResponseEntity<ResponseResult> (ResponseResult.success(tmp,"success"), HttpStatus.OK);
             }
         }

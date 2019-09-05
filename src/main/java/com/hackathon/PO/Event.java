@@ -153,4 +153,13 @@ public class Event {
                 ", title='" + title + '\'' +
                 '}';
     }
+
+//    @Override
+//    public int hashCode() {
+//        return this.id.hashCode()*17 + this.title.hashCode()*11;
+//    }
+
+    public Boolean includedIn(Set<Event> events) {
+        return events.stream().anyMatch(i -> i.getId() == this.id);
+    }
 }
