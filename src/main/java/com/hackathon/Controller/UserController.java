@@ -7,6 +7,7 @@ import com.hackathon.Service.PreferenceService;
 import com.hackathon.Service.UserService;
 import com.hackathon.Util.POToVO;
 import com.hackathon.Util.ResponseResult;
+import com.hackathon.Util.VOToPO;
 import com.hackathon.VO.UserEventVO;
 import com.hackathon.VO.UserRanking;
 import com.hackathon.VO.UserVO;
@@ -42,13 +43,22 @@ public class UserController {
 
     @RequestMapping(value = "/user", method = RequestMethod.POST)
     @ResponseBody
-    public ResponseEntity<ResponseResult> addUser (@RequestBody @Valid User user, BindingResult result) {
-        System.out.println("addUser:"+user.toString());
+    public ResponseEntity<ResponseResult> addUser (@RequestBody @Valid UserVO userVO, BindingResult result) {
+        System.out.println("addUser:"+userVO.toString());
         if (result.hasErrors()) {
             return new ResponseEntity<ResponseResult>(ResponseResult.fail(result.getFieldError().getDefaultMessage()), HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<ResponseResult> (ResponseResult.success(this.userService.save(user),"success"), HttpStatus.OK);
-    }
+        if (userVO.getId()!=null && userService.findById(userVO.getId()).isPresent()) {
+            User user = VOToPO.UserVOToPO(userVO,userService.findById(userVO.getId()).get(),preferenceService);
+            return new ResponseEntity<ResponseResult> (ResponseResult.success(this.userService.save(user),"success"), HttpStatus.OK);
+        } else if (userVO.getId()!=null && !userService.findById(userVO.getId()).isPresent()){
+            return new ResponseEntity<ResponseResult> (ResponseResult.fail("cannot find user."), HttpStatus.OK);
+        } else {
+            User user = VOToPO.UserVOToPO(userVO,new User(),preferenceService);
+            return new ResponseEntity<ResponseResult> (ResponseResult.success(this.userService.save(user),"success"), HttpStatus.OK);
+        }
+}
+
 
     @RequestMapping(value = "/user", method = RequestMethod.PUT)
     @ResponseBody
@@ -194,6 +204,7 @@ public class UserController {
     @ResponseBody
     public ResponseEntity<ResponseResult> addUserFavorateEvents (@RequestBody UserEventVO userEventVO) {
         System.out.println("addUserFavorateEvents");
+        System.out.println(userEventVO.toString());
         Optional<User> user = this.userService.findById(Integer.valueOf(userEventVO.getUserID()));
         Optional<Event> event = this.eventService.findById(Integer.valueOf(userEventVO.getEventID()));
         if (user.isPresent() && event.isPresent()) {
@@ -206,6 +217,7 @@ public class UserController {
     @RequestMapping(value = "/user/jointEvent/", method = RequestMethod.POST)
     @ResponseBody
     public ResponseEntity<ResponseResult> addUserJointEvents (@RequestBody UserEventVO userEventVO) {
+        System.out.println("addUserJointEvents:"+userEventVO.toString());
         Optional<User> user = this.userService.findById(Integer.valueOf(userEventVO.getUserID()));
         Optional<Event> event = this.eventService.findById(Integer.valueOf(userEventVO.getEventID()));
         if (user.isPresent() && event.isPresent()) {
@@ -242,10 +254,10 @@ public class UserController {
         }
         return new ResponseEntity<ResponseResult> (ResponseResult.success(userRankings,"success"), HttpStatus.OK);
     }
-    @RequestMapping(value = "/user/userJointParticularEvents/", method = RequestMethod.GET)
+    @RequestMapping(value = "/user/userJointParticularEvents", method = RequestMethod.POST)
     @ResponseBody
     public ResponseEntity<ResponseResult> getUserJointParticularEvents (@RequestBody UserEventVO userEventVO) {
-        System.out.println("getUserJointParticularEvents");
+        System.out.println("getUserJointParticularEvents:"+userEventVO.toString());
         Optional<User> user = this.userService.findById(Integer.valueOf(userEventVO.getUserID()));
         Optional<Event> event = this.eventService.findById(Integer.valueOf(userEventVO.getEventID()));
         if (user.isPresent() && event.isPresent()) {
@@ -260,7 +272,7 @@ public class UserController {
         }
         return new ResponseEntity<ResponseResult> (ResponseResult.fail("userID or eventID not available."),HttpStatus.BAD_REQUEST);
     }
-    @RequestMapping(value = "/user/userInterestParticularEvents/", method = RequestMethod.GET)
+    @RequestMapping(value = "/user/userInterestParticularEvents", method = RequestMethod.POST)
     @ResponseBody
     public ResponseEntity<ResponseResult> getUserInterestParticularEvents (@RequestBody UserEventVO userEventVO) {
         System.out.println("getUserInterestParticularEvents");

@@ -19,4 +19,12 @@ public class UserEventVO {
     public void setEventID(String eventID) {
         this.eventID = eventID;
     }
+
+    @Override
+    public String toString() {
+        return "UserEventVO{" +
+                "userID='" + userID + '\'' +
+                ", eventID='" + eventID + '\'' +
+                '}';
+    }
 }
