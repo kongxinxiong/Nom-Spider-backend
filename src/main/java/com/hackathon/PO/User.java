@@ -44,7 +44,7 @@ public class User {
     private Set<Event> userCreatedEvents = new HashSet<>();
 
     @JsonIgnore
-    @ManyToMany(mappedBy="eventJointUsers", fetch = FetchType.LAZY)
+    @ManyToMany(mappedBy="eventJointUsers", fetch = FetchType.LAZY,cascade=CascadeType.PERSIST)
     private Set<Event> userJointEvents = new HashSet<>();
 
     @JsonIgnore

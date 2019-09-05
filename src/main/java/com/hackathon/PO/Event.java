@@ -17,7 +17,7 @@ public class Event {
     @Column(name="id")
     private Integer id;
     @Column(name="title")
-    @NotBlank(message="title cannot be empty")
+//    @NotBlank(message="title cannot be empty")
     private String title;
     @ManyToOne(cascade=CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "userID")
@@ -30,7 +30,7 @@ public class Event {
 //    private Date endDate;
     @Column(name="location")
     private String location;
-    @Column(name="description")
+    @Column(name="description",length = 3000)
     private String description;
     @Column(name="maxNumber")
     private String maxNumber;

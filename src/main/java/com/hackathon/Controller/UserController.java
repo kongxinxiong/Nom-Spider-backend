@@ -198,10 +198,12 @@ public class UserController {
     @RequestMapping(value = "/user/userJoint7DaysComingEvents/{id}", method = RequestMethod.GET)
     @ResponseBody
     public ResponseEntity<ResponseResult> getUserJoint7DaysComingEvents (@PathVariable("id") Integer id) {
-        System.out.println("getUserJoint7DaysComingEvents");
+        System.out.println("getUserJoint7DaysComingEvents:"+id);
         Optional<User> user = this.userService.findById(id);
         long nd = 1000 * 24 * 60 * 60;
-        Set<Event> eventList = user.get().getUserJointEvents().stream().filter(t->(t.getStartDate().getTime()-new Date().getTime()/nd) <= 7).collect(Collectors.toSet());
+        Set<Event> eventList = user.get().getUserJointEvents().stream().filter(t->((t.getStartDate().getTime()-new Date().getTime())/nd) <= 7).collect(Collectors.toSet());
+        System.out.println(user.get().getUserJointEvents());
+        System.out.println("eventlist:"+eventList);
         return new ResponseEntity<ResponseResult> (ResponseResult.success(eventList,"success"), HttpStatus.OK);
     }
     @RequestMapping(value = "/user/userJointHistoryEvents/{id}", method = RequestMethod.GET)
@@ -253,25 +255,26 @@ public class UserController {
     public ResponseEntity<ResponseResult> getUserRanking () {
         System.out.println("get user ranking.");
         List<User> userList = this.userService.findAll();
-        HashMap<String,String> map = new HashMap<>();
+        HashMap<String,Integer> map = new HashMap<>();
         ArrayList<UserRanking> userRankings = new ArrayList<>();
         for (User user : userList) {
             int score = user.getUserCreatedEvents().size()*50 + user.getUserJointEvents().size()*30;
-            map.put(user.getName(),String.valueOf(score));
+            map.put(user.getName(),score);
         }
 //        map.entrySet().stream().sorted(Collections.reverseOrder(Map.Entry.comparingByValue())).forEach(System.out::println);
-        List<Map.Entry<String,String>> tmpList = map.entrySet().stream().sorted(Collections.reverseOrder(Map.Entry.comparingByValue())).collect(Collectors.toList());
+        List<Map.Entry<String,Integer>> tmpList = map.entrySet().stream().sorted(Collections.reverseOrder(Map.Entry.comparingByValue())).collect(Collectors.toList());
         int i=1;
-        for (Map.Entry<String,String> entry: tmpList) {
+        for (Map.Entry<String,Integer> entry: tmpList) {
             UserRanking userRanking = new UserRanking();
             userRanking.setRank(String.valueOf(i++));
             userRanking.setName(entry.getKey());
-            userRanking.setScore(entry.getValue());
+            userRanking.setScore(String.valueOf(entry.getValue()));
             userRankings.add(userRanking);
             if (i==10) {
                 break;
             }
         }
+        System.out.println("userRankings:"+userRankings);
         return new ResponseEntity<ResponseResult> (ResponseResult.success(userRankings,"success"), HttpStatus.OK);
     }
     @RequestMapping(value = "/user/userScore/{id}", method = RequestMethod.GET)

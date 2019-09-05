@@ -28,4 +28,13 @@ public class UserRanking {
     public void setScore(String score) {
         this.score = score;
     }
+
+    @Override
+    public String toString() {
+        return "UserRanking{" +
+                "rank='" + rank + '\'' +
+                ", name='" + name + '\'' +
+                ", score='" + score + '\'' +
+                '}';
+    }
 }
