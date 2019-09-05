@@ -1,0 +1,7 @@
+drop table event_joint_user_mapping;
+drop table event_preference_mapping;
+drop table user_interest_events_mapping;
+drop table user_preference_mapping;
+drop table event;
+drop table preference;
+drop table user;
