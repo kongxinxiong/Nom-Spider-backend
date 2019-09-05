@@ -113,7 +113,7 @@ public ResponseEntity<ResponseResult> uploadUserImage (@RequestParam("file") Mul
     public ResponseEntity<String> getUserPhoto (HttpServletRequest request, HttpServletResponse response, @PathVariable("filename") String filename) {
         String path = Thread.currentThread().getContextClassLoader().getResource("").getPath()+"temp/uploadedFiles/event/";
         File resultFile = new File (path,filename);
-        System.out.println("path:"+resultFile.getAbsolutePath());
+        System.out.println("getUserPhoto:"+resultFile.getAbsolutePath());
         if (resultFile.exists()) {
             response.setContentType("application/force-download");// 设置强制下载不打开
             response.addHeader("Content-Disposition", "attachment;fileName=" + filename);// 设置文件名

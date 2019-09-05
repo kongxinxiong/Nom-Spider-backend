@@ -131,7 +131,7 @@ public class UserController {
     public ResponseEntity<String> getUserPhoto (HttpServletRequest request, HttpServletResponse response, @PathVariable("filename") String filename) {
         String path = Thread.currentThread().getContextClassLoader().getResource("").getPath()+"temp/uploadedFiles/user/";
         File resultFile = new File (path,filename);
-        System.out.println("path:"+resultFile.getAbsolutePath());
+        System.out.println("getUserPhoto:"+resultFile.getAbsolutePath());
         if (resultFile.exists()) {
             response.setContentType("application/force-download");// 设置强制下载不打开
             response.addHeader("Content-Disposition", "attachment;fileName=" + filename);// 设置文件名
@@ -174,6 +174,7 @@ public class UserController {
     @RequestMapping(value = "/user/userCreatedEvents/{id}", method = RequestMethod.GET)
     @ResponseBody
     public ResponseEntity<ResponseResult> getUserCreatedEvents (@PathVariable("id") Integer id) {
+        System.out.println("getUserCreatedEvents");
         Optional<User> user = this.userService.findById(id);
         Set<Event> eventList = user.get().getUserCreatedEvents();
         return new ResponseEntity<ResponseResult> (ResponseResult.success(eventList,"success"), HttpStatus.OK);
@@ -181,6 +182,7 @@ public class UserController {
     @RequestMapping(value = "/user/userJointEvents/{id}", method = RequestMethod.GET)
     @ResponseBody
     public ResponseEntity<ResponseResult> getUserJointEvents (@PathVariable("id") Integer id) {
+        System.out.println("getUserJointEvents");
         Optional<User> user = this.userService.findById(id);
         Set<Event> eventList = user.get().getUserJointEvents();
         return new ResponseEntity<ResponseResult> (ResponseResult.success(eventList,"success"), HttpStatus.OK);
@@ -188,13 +190,23 @@ public class UserController {
     @RequestMapping(value = "/user/userJointComingEvents/{id}", method = RequestMethod.GET)
     @ResponseBody
     public ResponseEntity<ResponseResult> getUserJointComingEvents (@PathVariable("id") Integer id) {
+        System.out.println("getUserJointComingEvents");
         Optional<User> user = this.userService.findById(id);
         Set<Event> eventList = user.get().getUserJointEvents().stream().filter(t->t.getStartDate().getTime()>new Date().getTime()).collect(Collectors.toSet());
+        return new ResponseEntity<ResponseResult> (ResponseResult.success(eventList,"success"), HttpStatus.OK);
+    }
+    @RequestMapping(value = "/user/userJointHistoryEvents/{id}", method = RequestMethod.GET)
+    @ResponseBody
+    public ResponseEntity<ResponseResult> getUserJointHistoryEvents (@PathVariable("id") Integer id) {
+        System.out.println("getUserJointHistoryEvents");
+        Optional<User> user = this.userService.findById(id);
+        Set<Event> eventList = user.get().getUserJointEvents().stream().filter(t->t.getStartDate().getTime()<new Date().getTime()).collect(Collectors.toSet());
         return new ResponseEntity<ResponseResult> (ResponseResult.success(eventList,"success"), HttpStatus.OK);
     }
     @RequestMapping(value = "/user/userInterestEvents/{id}", method = RequestMethod.GET)
     @ResponseBody
     public ResponseEntity<ResponseResult> getUserInterestEvents (@PathVariable("id") Integer id) {
+        System.out.println("getUserInterestEvents");
         Optional<User> user = this.userService.findById(id);
         Set<Event> eventList = user.get().getUserInterestEvents();
         return new ResponseEntity<ResponseResult> (ResponseResult.success(eventList,"success"), HttpStatus.OK);
@@ -235,10 +247,9 @@ public class UserController {
         HashMap<String,String> map = new HashMap<>();
         ArrayList<UserRanking> userRankings = new ArrayList<>();
         for (User user : userList) {
-            int score = user.getUserCreatedEvents().size()*20 + user.getUserJointEvents().size()*10;
+            int score = user.getUserCreatedEvents().size()*50 + user.getUserJointEvents().size()*30;
             map.put(user.getName(),String.valueOf(score));
         }
-
 //        map.entrySet().stream().sorted(Collections.reverseOrder(Map.Entry.comparingByValue())).forEach(System.out::println);
         List<Map.Entry<String,String>> tmpList = map.entrySet().stream().sorted(Collections.reverseOrder(Map.Entry.comparingByValue())).collect(Collectors.toList());
         int i=1;
@@ -253,6 +264,16 @@ public class UserController {
             }
         }
         return new ResponseEntity<ResponseResult> (ResponseResult.success(userRankings,"success"), HttpStatus.OK);
+    }
+    @RequestMapping(value = "/user/userScore/{id}", method = RequestMethod.GET)
+    @ResponseBody
+    public ResponseEntity<ResponseResult> getUserScore (@PathVariable("id") Integer id) {
+        System.out.println("getUserScore");
+        Optional<User> user = this.userService.findById(id);
+        int score = user.get().getUserCreatedEvents().size()*50 + user.get().getUserJointEvents().size()*30;
+        HashMap<String, String> result = new HashMap<>();
+        result.put("score",String.valueOf(score));
+        return new ResponseEntity<ResponseResult> (ResponseResult.success(result,"success"), HttpStatus.OK);
     }
     @RequestMapping(value = "/user/userJointParticularEvents", method = RequestMethod.POST)
     @ResponseBody
