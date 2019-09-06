@@ -35,7 +35,7 @@ public class User {
     @Column(name="email")
     @NotBlank(message="email cannot be empty")
     @Email(message="you must input a valid email address")
-    @Pattern(regexp = "[a-zA-Z]*@hackathon.com", message="you must input hackathon email address")
+//    @Pattern(regexp = "[a-zA-Z]*@hackathon.com", message="you must input hackathon email address")
     private String email;
     @Column(name="photoURL")
     private String photoURL;
