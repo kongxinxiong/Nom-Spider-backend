@@ -51,15 +51,13 @@ public class UserController {
             return new ResponseEntity<ResponseResult>(ResponseResult.fail(result.getFieldError().getDefaultMessage()), HttpStatus.BAD_REQUEST);
         }
         if (userVO.getId()!=null && userService.findById(userVO.getId()).isPresent()) {
-            if (userVO.getPhotoURL()==null) {
-                userVO.setPhotoURL("defaultUser.jpg");
-            }
             User user = VOToPO.UserVOToPO(userVO,userService.findById(userVO.getId()).get(),preferenceService);
             return new ResponseEntity<ResponseResult> (ResponseResult.success(this.userService.save(user),"success"), HttpStatus.OK);
         } else if (userVO.getId()!=null && !userService.findById(userVO.getId()).isPresent()){
             return new ResponseEntity<ResponseResult> (ResponseResult.fail("cannot find user."), HttpStatus.OK);
         } else {
             User user = VOToPO.UserVOToPO(userVO,new User(),preferenceService);
+            user.setPhotoURL("defaultUser.jpg");
             return new ResponseEntity<ResponseResult> (ResponseResult.success(this.userService.save(user),"success"), HttpStatus.OK);
         }
 }
