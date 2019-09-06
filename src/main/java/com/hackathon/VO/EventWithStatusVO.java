@@ -1,31 +1,31 @@
 package com.hackathon.VO;
 
 public class EventWithStatusVO extends EventVO{
-    private String isJoint = "false";
-    private String isFavorate = "false";
-    private String isCreated = "false";
+    private Boolean isJoint = false;
+    private Boolean isFavorate = false;
+    private Boolean isCreated = false;
 
-    public String getIsJoint() {
+    public Boolean getIsJoint() {
         return isJoint;
     }
 
-    public void setIsJoint(String isJoint) {
+    public void setIsJoint(Boolean isJoint) {
         this.isJoint = isJoint;
     }
 
-    public String getIsFavorate() {
+    public Boolean getIsFavorate() {
         return isFavorate;
     }
 
-    public void setIsFavorate(String isFavorate) {
+    public void setIsFavorate(Boolean isFavorate) {
         this.isFavorate = isFavorate;
     }
 
-    public String getIsCreated() {
+    public Boolean getIsCreated() {
         return isCreated;
     }
 
-    public void setIsCreated(String isCreated) {
+    public void setIsCreated(Boolean isCreated) {
         this.isCreated = isCreated;
     }
 

@@ -61,13 +61,13 @@ public class POToVO {
                 eventWithStatusVO.getPreferences().add(preference.getId().toString());
             }
             if (interestEvents.contains(event)) {
-                eventWithStatusVO.setIsFavorate("true");
+                eventWithStatusVO.setIsFavorate(true);
             }
             if (jointEvents.contains(event)) {
-                eventWithStatusVO.setIsJoint("true");
+                eventWithStatusVO.setIsJoint(true);
             }
             if (createdEvents.contains(event)) {
-                eventWithStatusVO.setIsCreated("true");
+                eventWithStatusVO.setIsCreated(true);
             }
             eventWithStatusVOS.add(((EventWithStatusVO)eventWithStatusVO));
         }
