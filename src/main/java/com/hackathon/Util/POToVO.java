@@ -8,7 +8,9 @@ import com.hackathon.VO.EventWithStatusVO;
 import com.hackathon.VO.UserVO;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public class POToVO {
@@ -45,8 +47,8 @@ public class POToVO {
         }
         return eventVO;
     }
-    public static Set<EventWithStatusVO> eventWithStatusVOSet (Set<Event> eventSet, Set<Event> interestEvents, Set<Event> jointEvents, Set<Event> createdEvents) {
-        Set<EventWithStatusVO> eventWithStatusVOS = new HashSet<>();
+    public static ArrayList<EventWithStatusVO> eventWithStatusVOSet (ArrayList<Event> eventSet, Set<Event> interestEvents, Set<Event> jointEvents, Set<Event> createdEvents) {
+        ArrayList<EventWithStatusVO> eventWithStatusVOS = new ArrayList<>();
         for (Event event : eventSet) {
             EventWithStatusVO eventWithStatusVO = new EventWithStatusVO();
 //            eventWithStatusVO = eventPOToVO(event);
