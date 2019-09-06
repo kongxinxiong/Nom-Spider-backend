@@ -69,7 +69,7 @@ public class InitialData {
         event2.setDescription("We will have the monthly birthday party in Shanghai office,31F.And this time, we will celebrate for all the staff who was born in October.Food and drinks will be provided, hope all you enjoy the time.");
         event2.setMaxNumber("30");
         event2.setLocation("Shanghai");
-        event2.setPhotoURL("even2.png");
+        event2.setPhotoURL("event2.png");
 //        event2.getPreferences().add(preference1);
 
         Event event3 = new Event();
