@@ -175,11 +175,16 @@ public ResponseEntity<ResponseResult> uploadUserImage ( @RequestParam("file") Mu
         Optional<Event> event = this.eventService.findById(id);
         if (event.isPresent()) {
             Set<User> userList = event.get().getEventJointUsers();
+            Set<String> names = new HashSet<>();
             Set<String> userNames = new HashSet<>();
+            Set<HashMap<String,String>> result = new HashSet<HashMap<String,String>>();
             for (User user:userList) {
-                userNames.add(user.getName());
+                HashMap<String,String> temp= new HashMap<String,String>();
+                temp.put("name",user.getName());
+                temp.put("username",user.getUsername());
+                result.add(temp);
             }
-            return new ResponseEntity<ResponseResult> (ResponseResult.success(userNames,"success"),HttpStatus.OK);
+            return new ResponseEntity<ResponseResult> (ResponseResult.success(result,"success"),HttpStatus.OK);
         } else {
             return new ResponseEntity<ResponseResult> (ResponseResult.fail("no event found"),HttpStatus.OK);
         }
