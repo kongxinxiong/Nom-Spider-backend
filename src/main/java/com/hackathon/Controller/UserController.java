@@ -345,7 +345,7 @@ public class UserController {
     @RequestMapping(value = "/user/comingEventsWithStatusAndPreferences/{id}", method = RequestMethod.GET)
     @ResponseBody
     public ResponseEntity<ResponseResult> showAllComingEventsWithStatusAndPreferences (@PathVariable("id") Integer id) {
-        System.out.println("showAllComingEventsWithStatus");
+        System.out.println("showAllComingEventsWithStatusAndPreferences");
         User user = this.userService.findById(id).get();
         Set<Event> eventSet = this.eventService.findAll().stream().filter(t->{
             if (t.getStartDate()!=null && t.getStartDate().getTime()>new Date().getTime()){
@@ -374,11 +374,11 @@ public class UserController {
         }
         List<Map.Entry<Event,Integer>> tmpList = eventHashMap.entrySet().stream().sorted(Collections.reverseOrder(Map.Entry.comparingByValue())).collect(Collectors.toList());
 
-        Set<Event> entrySet = new HashSet<>();
+        ArrayList<Event> entrySet = new ArrayList<>();
         for (Map.Entry<Event,Integer> entry : tmpList) {
             entrySet.add(entry.getKey());
         }
-        Set<EventWithStatusVO> eventWithStatusVOS = POToVO.eventWithStatusVOSet(eventSet,user.getUserInterestEvents(),user.getUserJointEvents(),user.getUserCreatedEvents());
+        ArrayList<EventWithStatusVO> eventWithStatusVOS = POToVO.eventWithStatusVOSet(entrySet,user.getUserInterestEvents(),user.getUserJointEvents(),user.getUserCreatedEvents());
         return new ResponseEntity<ResponseResult> (ResponseResult.success(eventWithStatusVOS,"success"), HttpStatus.OK);
     }
 }
