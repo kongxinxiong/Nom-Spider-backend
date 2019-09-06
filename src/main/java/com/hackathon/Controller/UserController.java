@@ -8,6 +8,7 @@ import com.hackathon.Service.UserService;
 import com.hackathon.Util.POToVO;
 import com.hackathon.Util.ResponseResult;
 import com.hackathon.Util.VOToPO;
+import com.hackathon.VO.EventWithStatusVO;
 import com.hackathon.VO.UserEventVO;
 import com.hackathon.VO.UserRanking;
 import com.hackathon.VO.UserVO;
@@ -49,6 +50,9 @@ public class UserController {
             return new ResponseEntity<ResponseResult>(ResponseResult.fail(result.getFieldError().getDefaultMessage()), HttpStatus.BAD_REQUEST);
         }
         if (userVO.getId()!=null && userService.findById(userVO.getId()).isPresent()) {
+            if (userVO.getPhotoURL()==null) {
+                userVO.setPhotoURL("defaultUser.jpg");
+            }
             User user = VOToPO.UserVOToPO(userVO,userService.findById(userVO.getId()).get(),preferenceService);
             return new ResponseEntity<ResponseResult> (ResponseResult.success(this.userService.save(user),"success"), HttpStatus.OK);
         } else if (userVO.getId()!=null && !userService.findById(userVO.getId()).isPresent()){
@@ -243,9 +247,12 @@ public class UserController {
         System.out.println("addUserJointEvents:"+userEventVO.toString());
         Optional<User> user = this.userService.findById(Integer.valueOf(userEventVO.getUserID()));
         Optional<Event> event = this.eventService.findById(Integer.valueOf(userEventVO.getEventID()));
+        System.out.println("user.isPresent() && event.isPresent():"+user.isPresent() + event.isPresent());
         if (user.isPresent() && event.isPresent()) {
-            user.get().getUserJointEvents().add(event.get());
-            this.userService.save(user.get());
+//            user.get().getUserJointEvents().add(event.get());
+//            this.userService.save(user.get());
+            event.get().getEventJointUsers().add(user.get());
+            this.eventService.save(event.get());
             return new ResponseEntity<ResponseResult> (ResponseResult.success(userEventVO,"success"), HttpStatus.OK);
         }
         return new ResponseEntity<ResponseResult> (ResponseResult.fail("userID or eventID not available."),HttpStatus.BAD_REQUEST);
@@ -333,5 +340,20 @@ public class UserController {
             }
         }
         return new ResponseEntity<ResponseResult> (ResponseResult.fail("userID or eventID not available."),HttpStatus.BAD_REQUEST);
+    }
+    @RequestMapping(value = "/user/comingEventsWithStatus/{id}", method = RequestMethod.GET)
+    @ResponseBody
+    public ResponseEntity<ResponseResult> showAllComingEventsWithStatus (@PathVariable("id") Integer id) {
+        System.out.println("showAllComingEventsWithStatus");
+        User user = this.userService.findById(id).get();
+        Set<Event> eventSet = this.eventService.findAll().stream().filter(t->{
+            if (t.getStartDate()!=null && t.getStartDate().getTime()>new Date().getTime()){
+                return true;
+            } else {
+                return false;
+            }
+        }).collect(Collectors.toSet());
+        Set<EventWithStatusVO> eventWithStatusVOS = POToVO.eventWithStatusVOSet(eventSet,user.getUserInterestEvents(),user.getUserJointEvents(),user.getUserCreatedEvents());
+        return new ResponseEntity<ResponseResult> (ResponseResult.success(eventWithStatusVOS,"success"), HttpStatus.OK);
     }
 }

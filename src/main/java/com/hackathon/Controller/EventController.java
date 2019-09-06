@@ -53,6 +53,7 @@ public class EventController {
         }).collect(Collectors.toSet());
         return new ResponseEntity<ResponseResult> (ResponseResult.success(eventSet,"success"), HttpStatus.OK);
     }
+
     @RequestMapping(value = "/event", method = RequestMethod.POST)
     @ResponseBody
     public ResponseEntity<ResponseResult> addPreference(@RequestBody @Valid EventVO eventVO, BindingResult result) {
