@@ -43,6 +43,7 @@ public class VOToPO {
             event.setEventCreator(userService.findById(eventVO.getEventCreator()).get());
             event.setStartDate(sdf.parse(eventVO.getStartDate()));
             for (String id:eventVO.getPreferences()) {
+//                System.out.println("id:"+id);
                 event.getPreferences().add(preferenceService.findById(Integer.valueOf(id)).get());
             }
             return event;

@@ -88,6 +88,7 @@ public class EventController {
     @RequestMapping(value = "/event", method = RequestMethod.POST)
     @ResponseBody
     public ResponseEntity<ResponseResult> addPreference(@RequestBody @Valid EventVO eventVO, BindingResult result) {
+        System.out.println("addPreference:"+eventVO.toString());
         if (result.hasErrors()) {
             return new ResponseEntity<ResponseResult>(ResponseResult.fail(result.getFieldError().getDefaultMessage()), HttpStatus.BAD_REQUEST);
         }
