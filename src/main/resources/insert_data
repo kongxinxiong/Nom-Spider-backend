@@ -60,8 +60,6 @@ insert into user_interest_events_mapping values (1,15);
 
 insert into event_joint_user_mapping values (1,1);
 insert into event_joint_user_mapping values (3,1);
-insert into event_joint_user_mapping values (5,1);
-insert into event_joint_user_mapping values (7,1);
 insert into event_joint_user_mapping values (9,1);
 insert into event_joint_user_mapping values (10,1);
 insert into event_joint_user_mapping values (11,1);
