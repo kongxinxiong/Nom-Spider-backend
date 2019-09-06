@@ -1,6 +1,7 @@
 package com.hackathon.Controller;
 
 import com.hackathon.PO.Event;
+import com.hackathon.PO.Preference;
 import com.hackathon.PO.User;
 import com.hackathon.Service.EventService;
 import com.hackathon.Service.PreferenceService;
@@ -341,9 +342,9 @@ public class UserController {
         }
         return new ResponseEntity<ResponseResult> (ResponseResult.fail("userID or eventID not available."),HttpStatus.BAD_REQUEST);
     }
-    @RequestMapping(value = "/user/comingEventsWithStatus/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/user/comingEventsWithStatusAndPreferences/{id}", method = RequestMethod.GET)
     @ResponseBody
-    public ResponseEntity<ResponseResult> showAllComingEventsWithStatus (@PathVariable("id") Integer id) {
+    public ResponseEntity<ResponseResult> showAllComingEventsWithStatusAndPreferences (@PathVariable("id") Integer id) {
         System.out.println("showAllComingEventsWithStatus");
         User user = this.userService.findById(id).get();
         Set<Event> eventSet = this.eventService.findAll().stream().filter(t->{
@@ -353,6 +354,30 @@ public class UserController {
                 return false;
             }
         }).collect(Collectors.toSet());
+        Set<Preference> preferences = user.getPreferences();
+        Set<Event> allEventSet = this.eventService.findAll().stream().filter(t->{
+            if (t.getStartDate()!=null && t.getStartDate().getTime()>new Date().getTime()){
+                return true;
+            } else {
+                return false;
+            }
+        }).collect(Collectors.toSet());
+        HashMap<Event,Integer> eventHashMap = new HashMap();
+        for (Event event : allEventSet) {
+            Integer score = 0;
+            for (Preference eventPreferences : event.getPreferences()) {
+                if (preferences.contains(eventPreferences)) {
+                    score++;
+                }
+            }
+            eventHashMap.put(event,score);
+        }
+        List<Map.Entry<Event,Integer>> tmpList = eventHashMap.entrySet().stream().sorted(Collections.reverseOrder(Map.Entry.comparingByValue())).collect(Collectors.toList());
+
+        Set<Event> entrySet = new HashSet<>();
+        for (Map.Entry<Event,Integer> entry : tmpList) {
+            entrySet.add(entry.getKey());
+        }
         Set<EventWithStatusVO> eventWithStatusVOS = POToVO.eventWithStatusVOSet(eventSet,user.getUserInterestEvents(),user.getUserJointEvents(),user.getUserCreatedEvents());
         return new ResponseEntity<ResponseResult> (ResponseResult.success(eventWithStatusVOS,"success"), HttpStatus.OK);
     }
